@@ -1002,4 +1002,16 @@
       let assets = 0, liabs = 0; document.getElementById('bs-assets').innerHTML = ''; document.getElementById('bs-liabilities').innerHTML = '';
       state.accounts.forEach(acc => { const bal = state.balances[acc.id] || 0; if(bal === 0) return; if(acc.type === 'asset') { assets += bal; document.getElementById('bs-assets').innerHTML += `<li class="flex justify-between text-gray-600 border-b pb-1"><span>${acc.name}</span><span>${formatCurrency(bal)}</span></li>`; } if(acc.type === 'liability') { liabs += bal; document.getElementById('bs-liabilities').innerHTML += `<li class="flex justify-between text-gray-600 border-b pb-1"><span>${acc.name}</span><span>${formatCurrency(bal)}</span></li>`; } });
       let equity = assets - liabs; document.getElementById('bs-total-assets').innerText = formatCurrency(assets); document.getElementById('bs-total-liabilities').innerText = formatCurrency(liabs); document.getElementById('bs-total-equity').innerText = formatCurrency(equity);
-      renderBoxDiagram('bs-box-diagram', [{ label: '資産', val: assets, color: 'bg-blue-500' }], [{ label: '負債', val: liabs, color: 'bg-red-5
+      renderBoxDiagram('bs-box-diagram', [{ label: '資産', val: assets, color: 'bg-blue-500' }], [{ label: '負債', val: liabs, color: 'bg-red-500' }, { label: '純資産', val: Math.max(equity,0), color: 'bg-green-500' }], Math.max(assets, liabs + Math.max(equity,0)));
+    }
+    function renderPL() {
+      let income = 0, expense = 0; document.getElementById('pl-income').innerHTML = ''; document.getElementById('pl-expenses').innerHTML = '';
+      state.accounts.forEach(acc => { const bal = state.balances[acc.id] || 0; if(bal === 0) return; if(acc.type === 'income') { income += bal; document.getElementById('pl-income').innerHTML += `<li class="flex justify-between text-gray-600 border-b pb-1"><span>${acc.name}</span><span>${formatCurrency(bal)}</span></li>`; } if(acc.type === 'expense') { expense += bal; document.getElementById('pl-expenses').innerHTML += `<li class="flex justify-between text-gray-600 border-b pb-1"><span>${acc.name}</span><span>${formatCurrency(bal)}</span></li>`; } });
+      let netIncome = income - expense; document.getElementById('pl-total-income').innerText = formatCurrency(income); document.getElementById('pl-total-expenses').innerText = formatCurrency(expense); document.getElementById('pl-net-income').innerText = formatCurrency(netIncome);
+      let leftItems = [{ label: '費用', val: expense, color: 'bg-red-500' }]; let rightItems = [{ label: '収益', val: income, color: 'bg-blue-500' }];
+      if (netIncome > 0) leftItems.push({ label: '純利益', val: netIncome, color: 'bg-green-500' }); else if (netIncome < 0) rightItems.push({ label: '純損失', val: Math.abs(netIncome), color: 'bg-orange-500' });
+      renderBoxDiagram('pl-box-diagram', leftItems, rightItems, Math.max(income, expense));
+    }
+    function renderSettings() {
+      const majorUl = document.getElementById('setting-major-list'); const minorUl = document.getElementById('setting-minor-list');
+      majorUl.innerHTML = state.categories.major.map(c => `<li class="flex justify-between items-center bg-white p-2 rounded shadow-sm text-sm border-l-4 ${c.expenseType === 'fixed' ? 'border-purple-500' : 'border-orange-500'}"><div><span class="font-medium">${c.name}</span><span class="

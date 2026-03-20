@@ -3,11 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#F3F4F6">
-  
   <title>Poket AC</title>
   
   <script>
@@ -24,35 +19,24 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-    /* iPhoneのセーフエリア（ダイナミックアイランドやホームバー）を考慮した余白設定 */
-    body { 
-      background-color: #F3F4F6; /* 背景色を統一してステータスバーを綺麗に見せる */
-      padding-bottom: calc(65px + env(safe-area-inset-bottom)); 
-      -webkit-tap-highlight-color: transparent; 
-    }
+    body { background-color: #F3F4F6; padding-bottom: calc(65px + env(safe-area-inset-bottom)); -webkit-tap-highlight-color: transparent; }
     @media (min-width: 768px) { body { padding-bottom: 0; padding-top: 64px; } }
-    
     .tab-content { display: none; }
-    .tab-content.active { display: block; animation: fadeIn 0.3s; }
+    .tab-content.active { display: block; animation: fadeIn 0.2s; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    
     .box-diagram { display: flex; width: 100%; height: 240px; border-radius: 8px; overflow: hidden; color: white; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
     .box-col { display: flex; flex-direction: column; width: 50%; gap: 2px; }
     .box-item { display: flex; align-items: center; justify-content: center; flex-direction: column; transition: height 0.5s ease; padding: 4px; text-align: center; }
     .box-label { font-size: 0.85rem; }
     .box-val { font-size: 1.1rem; }
-    
     .hide-scroll::-webkit-scrollbar { display: none; }
     .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
     .pdf-exporting { background-color: #f3f4f6 !important; padding: 20px !important; }
-
-    /* iPhone用 セーフエリアクラス */
     .pt-safe { padding-top: max(1rem, env(safe-area-inset-top)); }
-    .pb-safe { padding-bottom: max(0.5rem, env(safe-area-inset-bottom)); }
     .px-safe { padding-left: max(1rem, env(safe-area-inset-left)); padding-right: max(1rem, env(safe-area-inset-right)); }
   </style>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans">
+<body class="text-gray-800 font-sans">
 
   <datalist id="major-category-list"></datalist>
   <datalist id="minor-category-list"></datalist>
@@ -60,18 +44,18 @@
   <header class="hidden md:flex fixed top-0 w-full bg-white shadow z-10 h-16 items-center px-4 lg:px-6 justify-between overflow-x-auto hide-scroll">
     <h1 class="text-xl font-bold text-blue-700 whitespace-nowrap mr-6"><i class="fa-solid fa-book text-blue-500 mr-2"></i>Poket AC</h1>
     <nav class="flex space-x-3 lg:space-x-5 text-sm lg:text-base whitespace-nowrap">
-      <button onclick="navigate('dashboard')" class="nav-btn text-gray-600 hover:text-blue-600 font-medium" data-target="dashboard">ホーム</button>
-      <button onclick="navigate('input')" class="nav-btn text-gray-600 hover:text-blue-600 font-medium" data-target="input">入力</button>
-      <button onclick="navigate('ledger')" class="nav-btn text-gray-600 hover:text-blue-600 font-medium" data-target="ledger">元帳</button>
-      <button onclick="navigate('bs')" class="nav-btn text-gray-600 hover:text-blue-600 font-medium" data-target="bs">B/S</button>
-      <button onclick="navigate('pl')" class="nav-btn text-gray-600 hover:text-blue-600 font-medium" data-target="pl">P/L</button>
-      <button onclick="navigate('budget')" class="nav-btn text-gray-600 hover:text-blue-600 font-medium" data-target="budget"><i class="fa-solid fa-bullseye mr-1"></i>予算</button>
-      <button onclick="navigate('report')" class="nav-btn text-gray-600 hover:text-blue-600 font-medium" data-target="report"><i class="fa-solid fa-chart-pie mr-1"></i>分析</button>
-      <button onclick="navigate('settings')" class="nav-btn text-gray-600 hover:text-blue-600 font-medium" data-target="settings"><i class="fa-solid fa-gear mr-1"></i>設定</button>
+      <button onclick="switchTab('dashboard')" class="nav-btn text-gray-600 hover:text-blue-600 font-medium" data-target="dashboard">ホーム</button>
+      <button onclick="switchTab('input')" class="nav-btn text-gray-600 hover:text-blue-600 font-medium" data-target="input">入力</button>
+      <button onclick="switchTab('ledger')" class="nav-btn text-gray-600 hover:text-blue-600 font-medium" data-target="ledger">元帳</button>
+      <button onclick="switchTab('bs')" class="nav-btn text-gray-600 hover:text-blue-600 font-medium" data-target="bs">B/S</button>
+      <button onclick="switchTab('pl')" class="nav-btn text-gray-600 hover:text-blue-600 font-medium" data-target="pl">P/L</button>
+      <button onclick="switchTab('budget')" class="nav-btn text-gray-600 hover:text-blue-600 font-medium" data-target="budget"><i class="fa-solid fa-bullseye mr-1"></i>予算</button>
+      <button onclick="switchTab('report')" class="nav-btn text-gray-600 hover:text-blue-600 font-medium" data-target="report"><i class="fa-solid fa-chart-pie mr-1"></i>分析</button>
+      <button onclick="switchTab('settings')" class="nav-btn text-gray-600 hover:text-blue-600 font-medium" data-target="settings"><i class="fa-solid fa-gear mr-1"></i>設定</button>
     </nav>
   </header>
 
-  <main class="max-w-6xl mx-auto md:p-6 mt-2 md:mt-8 pt-safe px-safe">
+  <main class="max-w-6xl mx-auto md:p-6 mt-2 md:mt-8 pt-safe px-safe pb-4">
     
     <section id="dashboard" class="tab-content active">
       <h2 class="text-2xl font-bold mb-6 text-gray-700">ダッシュボード</h2>
@@ -405,14 +389,14 @@
   </main>
 
   <nav class="md:hidden fixed bottom-0 w-full bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.05)] flex px-1 pt-2 pb-safe z-10 border-t border-gray-100 overflow-x-auto hide-scroll space-x-2">
-    <button onclick="navigate('dashboard')" class="nav-btn-mobile flex flex-col items-center text-gray-400 min-w-[55px] shrink-0" data-target="dashboard"><i class="fa-solid fa-chart-pie text-lg mb-1"></i><span class="text-[9px]">ホーム</span></button>
-    <button onclick="navigate('input')" class="nav-btn-mobile flex flex-col items-center text-gray-400 min-w-[55px] shrink-0" data-target="input"><i class="fa-solid fa-pen-to-square text-lg mb-1"></i><span class="text-[9px]">入力</span></button>
-    <button onclick="navigate('ledger')" class="nav-btn-mobile flex flex-col items-center text-gray-400 min-w-[55px] shrink-0" data-target="ledger"><i class="fa-solid fa-list text-lg mb-1"></i><span class="text-[9px]">元帳</span></button>
-    <button onclick="navigate('bs')" class="nav-btn-mobile flex flex-col items-center text-gray-400 min-w-[55px] shrink-0" data-target="bs"><i class="fa-solid fa-scale-balanced text-lg mb-1"></i><span class="text-[9px]">B/S</span></button>
-    <button onclick="navigate('pl')" class="nav-btn-mobile flex flex-col items-center text-gray-400 min-w-[55px] shrink-0" data-target="pl"><i class="fa-solid fa-file-invoice-dollar text-lg mb-1"></i><span class="text-[9px]">P/L</span></button>
-    <button onclick="navigate('budget')" class="nav-btn-mobile flex flex-col items-center text-gray-400 min-w-[55px] shrink-0" data-target="budget"><i class="fa-solid fa-bullseye text-lg mb-1"></i><span class="text-[9px]">予算</span></button>
-    <button onclick="navigate('report')" class="nav-btn-mobile flex flex-col items-center text-gray-400 min-w-[55px] shrink-0" data-target="report"><i class="fa-solid fa-chart-line text-lg mb-1"></i><span class="text-[9px]">分析</span></button>
-    <button onclick="navigate('settings')" class="nav-btn-mobile flex flex-col items-center text-gray-400 min-w-[55px] shrink-0" data-target="settings"><i class="fa-solid fa-gear text-lg mb-1"></i><span class="text-[9px]">設定</span></button>
+    <button onclick="switchTab('dashboard')" class="nav-btn-mobile flex flex-col items-center text-gray-400 min-w-[55px] shrink-0" data-target="dashboard"><i class="fa-solid fa-chart-pie text-lg mb-1"></i><span class="text-[9px]">ホーム</span></button>
+    <button onclick="switchTab('input')" class="nav-btn-mobile flex flex-col items-center text-gray-400 min-w-[55px] shrink-0" data-target="input"><i class="fa-solid fa-pen-to-square text-lg mb-1"></i><span class="text-[9px]">入力</span></button>
+    <button onclick="switchTab('ledger')" class="nav-btn-mobile flex flex-col items-center text-gray-400 min-w-[55px] shrink-0" data-target="ledger"><i class="fa-solid fa-list text-lg mb-1"></i><span class="text-[9px]">元帳</span></button>
+    <button onclick="switchTab('bs')" class="nav-btn-mobile flex flex-col items-center text-gray-400 min-w-[55px] shrink-0" data-target="bs"><i class="fa-solid fa-scale-balanced text-lg mb-1"></i><span class="text-[9px]">B/S</span></button>
+    <button onclick="switchTab('pl')" class="nav-btn-mobile flex flex-col items-center text-gray-400 min-w-[55px] shrink-0" data-target="pl"><i class="fa-solid fa-file-invoice-dollar text-lg mb-1"></i><span class="text-[9px]">P/L</span></button>
+    <button onclick="switchTab('budget')" class="nav-btn-mobile flex flex-col items-center text-gray-400 min-w-[55px] shrink-0" data-target="budget"><i class="fa-solid fa-bullseye text-lg mb-1"></i><span class="text-[9px]">予算</span></button>
+    <button onclick="switchTab('report')" class="nav-btn-mobile flex flex-col items-center text-gray-400 min-w-[55px] shrink-0" data-target="report"><i class="fa-solid fa-chart-line text-lg mb-1"></i><span class="text-[9px]">分析</span></button>
+    <button onclick="switchTab('settings')" class="nav-btn-mobile flex flex-col items-center text-gray-400 min-w-[55px] shrink-0" data-target="settings"><i class="fa-solid fa-gear text-lg mb-1"></i><span class="text-[9px]">設定</span></button>
   </nav>
 
   <script>
@@ -589,13 +573,17 @@
     // 初期化 & 自動仕訳
     // ==========================================
     function processRecurringJournals() {
-      const today = new Date(); const currentYearMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`; const currentDay = today.getDate();
+      const today = new Date(); 
+      const currentYearMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`; 
+      const currentDay = today.getDate();
       let addedCount = 0;
+      
       state.recurring.forEach(r => {
         if (currentDay >= r.day && r.lastTriggeredMonth !== currentYearMonth) {
           const paddedDay = String(r.day).padStart(2, '0');
           state.journals.push({
-            id: 'rec-' + Date.now() + Math.random(), date: `${currentYearMonth}-${paddedDay}`,
+            id: 'rec-' + Date.now() + Math.random(), 
+            date: `${currentYearMonth}-${paddedDay}`,
             debit: r.debit, credit: r.credit, amount: r.amount, majorCategory: r.majorCategory, minorCategory: r.minorCategory || '',
             content: r.content || '定期自動登録', comment: r.comment || ''
           });
@@ -649,7 +637,7 @@
       });
     }
 
-    window.navigate = function(viewId) {
+    window.switchTab = function(viewId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.getElementById(viewId).classList.add('active');
       window.scrollTo(0, 0); 
@@ -663,6 +651,17 @@
 
     function renderView(viewId) {
       calculateBalances();
+      
+      // 入力タブを開いた時にセレクトボックスの中身を最新化する
+      if (viewId === 'input') {
+        const html = getOptionsHTML();
+        document.querySelectorAll('.j-debit, .j-credit').forEach(sel => {
+          const currentVal = sel.value;
+          sel.innerHTML = html;
+          if(currentVal) sel.value = currentVal;
+        });
+      }
+      
       if (viewId === 'dashboard') renderDashboard();
       if (viewId === 'ledger') renderLedger();
       if (viewId === 'bs') renderBS();
@@ -689,7 +688,10 @@
       let totalAssets = 0; let totalLiabilities = 0; 
       let varExp = 0; let fixExp = 0; let expensesData = {};
       state.accounts.forEach(acc => { const bal = state.balances[acc.id] || 0; if (acc.type === 'asset') totalAssets += bal; if (acc.type === 'liability') totalLiabilities += bal; });
-      const currentMonth = new Date().toISOString().slice(0, 7);
+      
+      const today = new Date();
+      const currentMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+      
       state.journals.forEach(j => {
         if(j.date.startsWith(currentMonth)) {
           const dAcc = getAccount(j.debit);
@@ -700,6 +702,7 @@
           }
         }
       });
+      
       document.getElementById('dash-assets').innerText = formatCurrency(totalAssets); document.getElementById('dash-liabilities').innerText = formatCurrency(totalLiabilities); document.getElementById('dash-net-assets').innerText = formatCurrency(totalAssets - totalLiabilities);
       document.getElementById('dash-var-exp').innerText = formatCurrency(varExp); document.getElementById('dash-fix-exp').innerText = formatCurrency(fixExp);
 
@@ -824,15 +827,20 @@
         window.reportBarInst = new Chart(ctxBar, { type: 'bar', data: { labels: budgetData.labels, datasets: [ { label: '実績 (Actual)', data: budgetData.actuals, backgroundColor: '#EF4444' }, { label: '予算 (Budget)', data: budgetData.budgets, backgroundColor: '#E5E7EB' } ] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } } });
       }
 
-      // サマリー表
-      const tbody = document.getElementById('rep-monthly-tbody'); tbody.innerHTML = '';
+      // サマリー表の描画
+      const tbody = document.getElementById('rep-monthly-tbody');
+      tbody.innerHTML = '';
+      
       Object.keys(incByMajor).filter(k => incByMajor[k] > 0).sort((a,b) => incByMajor[b] - incByMajor[a]).forEach(k => {
         const pct = totalIncome > 0 ? (incByMajor[k] / totalIncome * 100).toFixed(1) : 0;
         tbody.innerHTML += `<tr><td class="p-2"><span class="px-2 py-1 bg-blue-100 text-blue-800 text-[10px] rounded">収入</span></td><td class="p-2 font-medium">${k}</td><td class="p-2 text-right text-blue-600 font-bold">${formatCurrency(incByMajor[k])}</td><td class="p-2 text-right text-gray-500">${pct}%</td></tr>`;
       });
+      
       const totalExp = fixExp + varExp;
       Object.keys(expByMajor).filter(k => expByMajor[k] > 0).sort((a,b) => expByMajor[b] - expByMajor[a]).forEach(k => {
-        const t = getMajorCatType(k); const tLabel = t === 'fixed' ? '固定費' : '変動費'; const tClass = t === 'fixed' ? 'bg-purple-100 text-purple-800' : 'bg-orange-100 text-orange-800';
+        const t = getMajorCatType(k);
+        const tLabel = t === 'fixed' ? '固定費' : '変動費';
+        const tClass = t === 'fixed' ? 'bg-purple-100 text-purple-800' : 'bg-orange-100 text-orange-800';
         const pct = totalExp > 0 ? (expByMajor[k] / totalExp * 100).toFixed(1) : 0;
         tbody.innerHTML += `<tr><td class="p-2"><span class="px-2 py-1 ${tClass} text-[10px] rounded">${tLabel}</span></td><td class="p-2 font-medium">${k}</td><td class="p-2 text-right text-gray-700">${formatCurrency(expByMajor[k])}</td><td class="p-2 text-right text-gray-500">${pct}%</td></tr>`;
       });
@@ -935,7 +943,7 @@
         state.journals.push({ id: Date.now() + Math.random(), date: row.querySelector('.j-date').value, debit, credit, amount: parseInt(row.querySelector('.j-amount').value, 10), majorCategory: major, minorCategory: minor, content: row.querySelector('.j-content').value.trim(), comment: row.querySelector('.j-comment').value.trim() });
         autoRegisterCategories(major, minor); validCount++;
       });
-      if(validCount === rows.length) { saveData(); document.getElementById('manual-entries-container').innerHTML = ''; addJournalEntryRow(); alert(`${validCount}件登録しました！`); navigate('dashboard'); }
+      if(validCount === rows.length) { saveData(); document.getElementById('manual-entries-container').innerHTML = ''; addJournalEntryRow(); alert(`${validCount}件登録しました！`); switchTab('dashboard'); }
     });
     function autoRegisterCategories(major, minor) {
       let updated = false;
@@ -981,7 +989,7 @@
             if(debit && credit && debit !== credit) { state.journals.push({ id: pj.id, date: pj.date, amount: pj.amount, debit, credit, majorCategory, minorCategory, content: tr.querySelector('.csv-content').value.trim(), comment: tr.querySelector('.csv-comment').value.trim() }); autoRegisterCategories(majorCategory, minorCategory); count++; }
         }
       });
-      saveData(); alert(`${count}件登録しました！`); document.getElementById('csv-file').value = ''; document.getElementById('csv-preview-container').classList.add('hidden'); pendingCSVJournals = []; navigate('dashboard');
+      saveData(); alert(`${count}件登録しました！`); document.getElementById('csv-file').value = ''; document.getElementById('csv-preview-container').classList.add('hidden'); pendingCSVJournals = []; switchTab('dashboard');
     };
     window.handleBudgetChange = function(catName, value) { const val = parseInt(value, 10); if(!isNaN(val) && val >= 0) { state.budgets[catName] = val; saveData(); renderBudget(); } };
     window.renderBudget = function() {
@@ -1031,7 +1039,6 @@
       reqUl.innerHTML = state.recurring.map(r => `<li class="flex justify-between items-center bg-white p-3 rounded shadow-sm text-sm border-l-4 border-blue-500"><div><div class="font-bold text-gray-700">毎月 ${r.day} 日 <span class="text-blue-600 ml-2">¥${formatCurrency(r.amount).replace('¥','')}</span></div><div class="text-xs text-gray-500 mt-1">${r.majorCategory} / ${getAccount(r.debit).name} ← ${getAccount(r.credit).name}</div></div><button onclick="deleteRecurring('${r.id}')" class="text-red-500 hover:text-red-700 p-2"><i class="fa-solid fa-trash"></i></button></li>`).join('');
       const tbody = document.getElementById('settings-accounts-list'); tbody.innerHTML = '';
       Object.keys(TYPE_LABELS).forEach(type => { state.accounts.filter(a => a.type === type).forEach(a => { tbody.innerHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-2"><span class="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs">${TYPE_LABELS[a.type]}</span></td><td class="p-2 font-medium">${a.name}</td><td class="p-2 text-right"><button onclick="deleteAccount('${a.id}')" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button></td></tr>`; }); });
-      document.getElementById('r-debit').innerHTML = getOptionsHTML(); document.getElementById('r-credit').innerHTML = getOptionsHTML();
     }
     window.addCategory = function(type) {
       if (type === 'major') {
@@ -1087,7 +1094,7 @@
     // 初期化
     updateCategoryDatalist();
     addJournalEntryRow(); 
-    navigate('dashboard');
+    switchTab('dashboard'); // ここも navigate ではなく switchTab に修正
   </script>
 </body>
 </html>

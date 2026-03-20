@@ -148,7 +148,7 @@
     </section>
 
     <section id="input" class="tab-content">
-      <h2 class="text-3xl font-extrabold text-gray-800 mb-6 tracking-tight mt-2">取引を記録する</h2>
+      <h2 class="text-3xl font-extrabold text-gray-800 mb-8 tracking-tight mt-2">記録する</h2>
       
       <div class="card !p-5 md:!p-8">
         <div class="flex bg-gray-100 p-1.5 rounded-xl mb-6 w-full max-w-lg mx-auto shadow-inner">
@@ -172,7 +172,7 @@
               <div id="si-transfer-to-box" class="hidden"><label>移動先 (入金先)</label><select id="si-transfer-to" class="input-field shadow-sm bg-white"></select></div>
             </div>
 
-            <div><label>メモ (お店や詳細)</label><input type="text" id="si-memo" class="input-field shadow-sm" placeholder="例: スーパー、Amazon"></div>
+            <div><label>メモ・摘要 (お店や内容)</label><input type="text" id="si-memo" class="input-field shadow-sm" placeholder="例: スーパー、Amazon、お小遣い"></div>
 
             <div class="pt-4 flex justify-center">
               <button type="submit" class="btn-primary w-full md:w-auto md:min-w-[300px] !text-lg !py-3 shadow-lg"><i class="fa-solid fa-check mr-2"></i>保存する</button>
@@ -191,15 +191,14 @@
       </div>
       
       <div class="card !p-0 overflow-hidden shadow-sm">
-        <div id="history-list" class="divide-y divide-gray-100 max-h-[70vh] overflow-y-auto hide-scroll pb-10">
-          </div>
+        <div id="history-list" class="divide-y divide-gray-100 max-h-[70vh] overflow-y-auto hide-scroll pb-10"></div>
       </div>
     </section>
 
     <section id="report" class="tab-content">
       <div class="flex justify-between items-center mb-6 mt-2">
         <h2 class="text-3xl font-extrabold text-gray-800 tracking-tight">分析・帳簿</h2>
-        <button onclick="exportPDF()" class="btn-secondary !text-red-600 !border-red-200 !bg-red-50 hover:!bg-red-100 !py-2 !px-3 !text-xs"><i class="fa-solid fa-file-pdf mr-1"></i>PDF出力</button>
+        <button onclick="exportPDF()" class="btn-secondary !text-red-600 !border-red-200 !bg-red-50 hover:!bg-red-100 !py-2 !px-4 !text-sm"><i class="fa-solid fa-file-pdf mr-2"></i>PDF出力</button>
       </div>
       
       <div class="flex space-x-2 mb-6 overflow-x-auto hide-scroll pb-2">
@@ -217,7 +216,7 @@
             <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 border-b pb-4 gap-4">
               <h3 class="text-lg font-bold text-gray-700"><i class="fa-solid fa-bullseye text-blue-500 mr-2"></i><span id="budget-month-display">表示月</span>の予算消化状況</h3>
               <div class="flex flex-wrap gap-2 w-full md:w-auto">
-                <button onclick="copyPrevBudget()" class="btn-secondary !py-2 !px-3 !text-xs !rounded-lg"><i class="fa-solid fa-copy mr-1"></i>前月の設定をコピー</button>
+                <button onclick="copyPrevBudget()" class="btn-secondary !py-2 !px-3 !text-xs !rounded-lg"><i class="fa-solid fa-copy mr-1"></i>前月設定をコピー</button>
                 <button onclick="carryOverBudget()" class="btn-primary !py-2 !px-3 !text-xs !rounded-lg whitespace-nowrap"><i class="fa-solid fa-hand-holding-dollar mr-1"></i>前月残額を当月に繰越</button>
                 <input type="month" id="budget-month" class="input-field !h-10 !w-auto text-sm font-bold shadow-sm" onchange="renderReports()">
               </div>
@@ -239,7 +238,7 @@
           <div class="card shadow-sm">
             <div class="flex justify-between items-center mb-6">
               <h3 class="font-bold text-gray-800 text-lg">月別 収支トレンド</h3>
-              <input type="number" id="rep-year" class="input-field !h-10 !w-24 text-sm font-bold text-center shadow-sm" onchange="renderReports()">
+              <input type="number" id="rep-year" class="input-field !h-10 !w-24 text-base font-bold text-center shadow-sm" onchange="renderReports()">
             </div>
             <div class="h-80 relative"><canvas id="annualTrendChart"></canvas></div>
           </div>
@@ -327,7 +326,7 @@
             <input type="number" id="r-amount" min="1" class="input-field !h-10 font-bold text-sm text-blue-700 bg-blue-50" placeholder="金額" required>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-            <div><label class="!mb-1">出金元 / 入金先</label><select id="r-account" class="input-field !h-10 text-sm" required></select></div>
+            <div><label class="!mb-1">出金元 / 入金先 (口座・財布)</label><select id="r-account" class="input-field !h-10 text-sm" required></select></div>
             <div><label class="!mb-1">カテゴリ</label><select id="r-category" class="input-field !h-10 text-sm" required></select></div>
           </div>
           <div><label class="!mb-1">メモ (摘要)</label><input type="text" id="r-memo" class="input-field !h-10 text-sm" placeholder="例: 家賃引き落とし"></div>
@@ -351,20 +350,42 @@
       </div>
 
       <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-5 rounded-2xl shadow-sm border border-blue-100 mb-6">
-        <h3 class="text-lg font-bold mb-3 text-blue-800 border-b border-blue-200 pb-2"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>クラウド一時同期</h3>
-        <div class="flex flex-col md:flex-row gap-4">
-          <div class="flex-1 bg-white p-4 rounded-xl shadow-sm">
-            <button onclick="syncUpload()" id="sync-up-btn" class="w-full bg-blue-600 text-white font-bold rounded-lg px-3 py-2 hover:bg-blue-700 transition text-sm"><i class="fa-solid fa-cloud-arrow-up mr-1"></i>一時IDを発行</button>
-            <div id="sync-result" class="hidden mt-3 text-center bg-blue-50 py-2 rounded border border-blue-200">
-              <span id="sync-id-display" class="text-xl font-extrabold text-blue-700 select-all">---</span>
+        <h3 class="text-lg font-bold mb-3 text-blue-800 border-b border-blue-200 pb-2"><i class="fa-solid fa-rotate mr-2"></i>PC・別端末とのデータ同期</h3>
+        
+        <div class="bg-white p-4 rounded-xl shadow-sm mb-4 border border-blue-50">
+          <h4 class="font-bold text-gray-700 mb-2 text-sm"><i class="fa-solid fa-cloud-arrow-up mr-1 text-blue-500"></i>方法1：クラウド経由で同期 (一時ID発行)</h4>
+          <p class="text-xs text-gray-500 mb-3">クラウドにデータを預け、別の端末でIDを入力して復元します。</p>
+          <div class="flex flex-col md:flex-row gap-4 mt-3">
+            <div class="flex-1">
+              <button onclick="syncUpload()" id="sync-up-btn" class="w-full bg-blue-600 text-white font-bold rounded-lg px-3 py-2 hover:bg-blue-700 transition text-sm active:scale-95"><i class="fa-solid fa-cloud-arrow-up mr-1"></i>一時IDを発行する</button>
+              <div id="sync-result" class="hidden mt-3 text-center bg-blue-50 py-2 rounded border border-blue-200">
+                <span id="sync-id-display" class="text-xl font-extrabold text-blue-700 select-all">---</span>
+              </div>
+            </div>
+            <div class="flex-1">
+              <div class="flex gap-2">
+                <input type="text" id="sync-id-input" placeholder="IDを入力" class="flex-1 input-field !h-10 text-center font-bold">
+                <button onclick="syncDownload()" id="sync-down-btn" class="bg-indigo-600 text-white font-bold rounded-lg px-4 h-10 hover:bg-indigo-700 transition active:scale-95"><i class="fa-solid fa-download"></i></button>
+              </div>
             </div>
           </div>
-          <div class="flex-1 bg-white p-4 rounded-xl shadow-sm">
-            <div class="flex gap-2">
-              <input type="text" id="sync-id-input" placeholder="IDを入力" class="flex-1 input-field !h-10 text-center font-bold">
-              <button onclick="syncDownload()" id="sync-down-btn" class="bg-indigo-600 text-white font-bold rounded-lg px-4 h-10 hover:bg-indigo-700 transition"><i class="fa-solid fa-download"></i></button>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl shadow-sm mb-4 border border-gray-100">
+          <h4 class="font-bold text-gray-700 mb-2 text-sm"><i class="fa-solid fa-paste mr-1 text-gray-500"></i>方法2：同期コードで確実に行う (オフライン対応)</h4>
+          <p class="text-xs text-gray-500 mb-3">外部通信を使わない最も確実な方法です。出力された文字列をLINEやメールで送り、別端末に貼り付けます。</p>
+          <div class="flex flex-col md:flex-row gap-4">
+            <div class="flex-1">
+              <button onclick="generateSyncCode()" class="w-full bg-gray-800 text-white font-bold rounded-lg px-3 py-2 hover:bg-gray-900 transition text-sm active:scale-95">同期コードを出力</button>
+            </div>
+            <div class="flex-1">
+              <div class="flex gap-2">
+                <input type="text" id="sync-code-input" placeholder="コードを貼り付け" class="flex-1 input-field !h-10 text-xs font-mono bg-gray-50">
+                <button onclick="importSyncCode()" class="bg-gray-800 text-white font-bold rounded-lg px-4 h-10 hover:bg-gray-900 transition active:scale-95"><i class="fa-solid fa-file-import"></i></button>
+              </div>
             </div>
           </div>
+          <textarea id="sync-code-output" class="hidden w-full mt-3 p-2 border rounded text-xs font-mono bg-gray-50 h-24" readonly></textarea>
         </div>
       </div>
 
@@ -396,9 +417,9 @@
         <input type="hidden" id="edit-id">
         <div class="space-y-4">
           <div><label>日付</label><input type="date" id="edit-date" class="input-field bg-gray-50" required></div>
-          <div class="grid grid-cols-2 gap-3">
-            <div><label>入金先 / 費用</label><select id="edit-debit" class="input-field bg-gray-50 text-sm" required></select></div>
-            <div><label>支払元 / 収入</label><select id="edit-credit" class="input-field bg-gray-50 text-sm" required></select></div>
+          <div class="grid grid-cols-2 gap-4">
+            <div><label>入金先 / 費用カテゴリ</label><select id="edit-debit" class="input-field bg-gray-50 text-sm" required></select></div>
+            <div><label>支払元 / 収入カテゴリ</label><select id="edit-credit" class="input-field bg-gray-50 text-sm" required></select></div>
           </div>
           <div><label>金額</label><input type="number" id="edit-amount" class="input-field font-extrabold text-xl text-blue-700 bg-blue-50 border-blue-200" min="1" required></div>
           <div><label>メモ・摘要</label><input type="text" id="edit-memo" class="input-field" placeholder="内容"></div>
@@ -411,7 +432,7 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'poket_kakeibo_v3';
+    const STORAGE_KEY = 'poket_kakeibo_v4'; // 新規設計用クリーンキー
     
     const defaultAccounts = [
       { id: 'a1', name: '財布 (現金)', type: 'asset' }, { id: 'a2', name: 'メイン口座', type: 'asset' },
@@ -428,7 +449,6 @@
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) { 
         state = JSON.parse(saved); 
-        if(state.budgets) { state.baseBudgets = state.budgets; delete state.budgets; }
         if(!state.baseBudgets) state.baseBudgets = {};
         if(!state.monthlyBudgets) state.monthlyBudgets = {};
       } else { 
@@ -660,12 +680,12 @@
       if(confirm('完全に削除しますか？')) { state.journals = state.journals.filter(j => String(j.id) !== String(id)); saveData(); renderHistory(); renderDashboard(); }
     };
 
-    let currentReportTab = 'summary';
+    let currentReportTab = 'budget';
     window.switchReportTab = function(tabId) {
       currentReportTab = tabId;
       document.querySelectorAll('.report-view').forEach(el => el.classList.add('hidden'));
       document.getElementById('report-' + tabId).classList.remove('hidden');
-      ['rtab-summary', 'rtab-pl', 'rtab-bs', 'rtab-ledger', 'rtab-budget'].forEach(id => {
+      ['rtab-budget', 'rtab-summary', 'rtab-pl', 'rtab-bs', 'rtab-ledger'].forEach(id => {
         const btn = document.getElementById(id); if(!btn) return;
         if(id === 'rtab-' + tabId) { btn.className = 'btn-primary !px-4 !py-2 !rounded-lg !text-sm whitespace-nowrap shadow-sm transition'; } 
         else { btn.className = 'btn-secondary !px-4 !py-2 !rounded-lg !text-sm whitespace-nowrap !border-gray-200 shadow-sm transition'; }
@@ -675,46 +695,7 @@
 
     window.renderReports = function() {
       const balances = calcBalances();
-      if(currentReportTab === 'summary') {
-        let year = document.getElementById('rep-year').value; if(!year) { year = new Date().getFullYear(); document.getElementById('rep-year').value = year; }
-        let inc = new Array(12).fill(0); let exp = new Array(12).fill(0);
-        state.journals.forEach(j => {
-          if(j.date.startsWith(year.toString())) {
-            const m = parseInt(j.date.substring(5,7), 10) - 1; const d = getAcc(j.debit); const c = getAcc(j.credit);
-            if(d.type === 'expense') exp[m] += j.amount; if(c.type === 'income') inc[m] += j.amount;
-          }
-        });
-        const ctx = document.getElementById('annualTrendChart').getContext('2d'); if(window.trendChart) window.trendChart.destroy();
-        window.trendChart = new Chart(ctx, { type: 'bar', data: { labels: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'], datasets: [{label: '収入', data: inc, backgroundColor: '#3B82F6', borderRadius:4}, {label: '支出', data: exp, backgroundColor: '#F97316', borderRadius:4}] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } });
-      }
-      if(currentReportTab === 'pl') {
-        let m = document.getElementById('pl-month').value; if(!m) { m = new Date().toISOString().slice(0,7); document.getElementById('pl-month').value = m; }
-        let iTot = 0, eTot = 0; const iList = document.getElementById('pl-income-list'); iList.innerHTML = ''; const eList = document.getElementById('pl-expense-list'); eList.innerHTML = '';
-        const mBalances = {}; state.accounts.forEach(a => mBalances[a.id] = 0);
-        state.journals.filter(j => j.date.startsWith(m)).forEach(j => { const d = getAcc(j.debit); const c = getAcc(j.credit); if(d.type==='expense') mBalances[j.debit]+=j.amount; if(c.type==='income') mBalances[j.credit]+=j.amount; });
-        state.accounts.forEach(a => { const val = mBalances[a.id]; if(val===0) return;
-          if(a.type === 'income') { iTot += val; iList.innerHTML += `<li class="flex justify-between border-b border-gray-100 pb-2"><span>${a.name}</span><span class="font-bold text-gray-800">${formatJPY(val)}</span></li>`; }
-          if(a.type === 'expense') { eTot += val; eList.innerHTML += `<li class="flex justify-between border-b border-gray-100 pb-2"><span>${a.name}</span><span class="font-bold text-gray-800">${formatJPY(val)}</span></li>`; }
-        });
-        document.getElementById('pl-total-income').innerText = formatJPY(iTot); document.getElementById('pl-total-expense').innerText = formatJPY(eTot); document.getElementById('pl-net-income').innerText = formatJPY(iTot - eTot);
-      }
-      if(currentReportTab === 'bs') {
-        let aTot = 0, lTot = 0; const aList = document.getElementById('bs-assets-list'); aList.innerHTML = ''; const lList = document.getElementById('bs-liab-list'); lList.innerHTML = '';
-        state.accounts.forEach(a => { const val = balances[a.id]; if(val===0) return;
-          if(a.type === 'asset') { aTot += val; aList.innerHTML += `<li class="flex justify-between border-b border-gray-100 pb-2"><span>${a.name}</span><span class="font-bold text-gray-800">${formatJPY(val)}</span></li>`; }
-          if(a.type === 'liability') { lTot += val; lList.innerHTML += `<li class="flex justify-between border-b border-gray-100 pb-2"><span>${a.name}</span><span class="font-bold text-gray-800">${formatJPY(val)}</span></li>`; }
-        });
-        document.getElementById('bs-total-assets').innerText = formatJPY(aTot); document.getElementById('bs-total-liab').innerText = formatJPY(lTot); document.getElementById('bs-total-equity').innerText = formatJPY(aTot - lTot);
-      }
-      if(currentReportTab === 'ledger') {
-        const sel = document.getElementById('ledger-acc-select'); if(sel.options.length === 0) sel.innerHTML = buildAccOptions(['asset','liability','expense','income']);
-        const accId = sel.value; if(!accId) return; const accType = getAcc(accId).type; const tbody = document.getElementById('ledger-tbody'); tbody.innerHTML = ''; let runBal = 0;
-        [...state.journals].sort((a,b)=> new Date(a.date)-new Date(b.date)).filter(j => j.debit === accId || j.credit === accId).forEach(j => {
-          const isDeb = j.debit === accId; const opp = isDeb ? getAcc(j.credit).name : getAcc(j.debit).name;
-          if(accType === 'asset' || accType === 'expense') runBal += isDeb ? j.amount : -j.amount; else runBal += isDeb ? -j.amount : j.amount;
-          tbody.innerHTML += `<tr class="border-b text-xs md:text-sm hover:bg-gray-50 transition"><td class="p-3 text-gray-500 whitespace-nowrap">${j.date.slice(5)}</td><td class="p-3 font-bold text-gray-700">${opp}<div class="text-[10px] text-gray-400 font-normal truncate max-w-[150px] mt-0.5">${j.desc||''}</div></td><td class="p-3 text-right text-blue-600 font-bold">${isDeb?formatJPY(j.amount):''}</td><td class="p-3 text-right text-red-500 font-bold">${!isDeb?formatJPY(j.amount):''}</td><td class="p-3 text-right font-black bg-gray-50">${formatJPY(runBal)}</td></tr>`;
-        });
-      }
+      
       if(currentReportTab === 'budget') {
         const m = document.getElementById('budget-month').value || new Date().toISOString().slice(0,7); 
         document.getElementById('budget-month').value = m;
@@ -729,22 +710,65 @@
           const act = mExp[a.id] || 0; 
           const ratio = currentB>0 ? (act/currentB)*100 : 0; const over = act>currentB && currentB>0;
           
-          let bar = currentB>0 ? `<div class="flex justify-between text-xs mb-1"><span class="${over?'text-red-600 font-bold':'text-gray-500'}">${Math.floor(ratio)}%</span><span class="text-gray-400">残: ${formatJPY(currentB - act)}</span></div><div class="w-full bg-gray-200 rounded-full h-2"><div class="${over?'bg-red-500':'bg-blue-500'} h-2 rounded-full transition-all" style="width:${Math.min(ratio,100)}%"></div></div>` : `<span class="text-xs text-gray-400">予算未設定</span>`;
+          let bar = currentB>0 ? `<div class="flex justify-between text-[10px] sm:text-xs mb-1"><span class="${over?'text-red-600 font-bold':'text-gray-500'}">${Math.floor(ratio)}%</span><span class="text-gray-400">残: ${formatJPY(currentB - act)}</span></div><div class="w-full bg-gray-200 rounded-full h-2"><div class="${over?'bg-red-500':'bg-blue-500'} h-2 rounded-full transition-all" style="width:${Math.min(ratio,100)}%"></div></div>` : `<span class="text-[10px] sm:text-xs text-gray-400">予算未設定</span>`;
           
           tbody.innerHTML += `
             <tr class="border-b hover:bg-gray-50">
-              <td class="p-3 font-bold text-gray-700">${a.name}</td>
-              <td class="p-3 text-right">
-                <input type="number" class="input-field !h-10 !w-24 sm:!w-32 text-right font-bold text-blue-600 bg-blue-50 py-1" value="${currentB}" onchange="updateMonthlyBudget('${m}', '${a.id}', this.value)">
+              <td class="p-2 sm:p-3 font-bold text-gray-700 text-xs sm:text-sm">${a.name}</td>
+              <td class="p-2 sm:p-3 text-right">
+                <input type="number" class="input-field !h-8 !px-1 sm:!px-2 !w-16 sm:!w-24 text-right font-bold text-blue-600 bg-blue-50 py-1 text-xs sm:text-sm" value="${currentB}" onchange="updateMonthlyBudget('${m}', '${a.id}', this.value)">
               </td>
-              <td class="p-3 text-right font-black text-gray-800">${formatJPY(act)}</td>
-              <td class="p-3 align-middle min-w-[120px]">${bar}</td>
+              <td class="p-2 sm:p-3 text-right font-black text-gray-800 text-xs sm:text-sm">${formatJPY(act)}</td>
+              <td class="p-2 sm:p-3 align-middle min-w-[100px]">${bar}</td>
             </tr>`;
+        });
+      }
+      
+      if(currentReportTab === 'summary') {
+        let year = document.getElementById('rep-year').value; if(!year) { year = new Date().getFullYear(); document.getElementById('rep-year').value = year; }
+        let inc = new Array(12).fill(0); let exp = new Array(12).fill(0);
+        state.journals.forEach(j => {
+          if(j.date.startsWith(year.toString())) {
+            const m = parseInt(j.date.substring(5,7), 10) - 1; const d = getAcc(j.debit); const c = getAcc(j.credit);
+            if(d.type === 'expense') exp[m] += j.amount; if(c.type === 'income') inc[m] += j.amount;
+          }
+        });
+        const ctx = document.getElementById('annualTrendChart').getContext('2d'); if(window.trendChart) window.trendChart.destroy();
+        window.trendChart = new Chart(ctx, { type: 'bar', data: { labels: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'], datasets: [{label: '収入', data: inc, backgroundColor: '#3B82F6', borderRadius:4}, {label: '支出', data: exp, backgroundColor: '#F97316', borderRadius:4}] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } });
+      }
+      
+      if(currentReportTab === 'pl') {
+        let m = document.getElementById('pl-month').value; if(!m) { m = new Date().toISOString().slice(0,7); document.getElementById('pl-month').value = m; }
+        let iTot = 0, eTot = 0; const iList = document.getElementById('pl-income-list'); iList.innerHTML = ''; const eList = document.getElementById('pl-expense-list'); eList.innerHTML = '';
+        const mBalances = {}; state.accounts.forEach(a => mBalances[a.id] = 0);
+        state.journals.filter(j => j.date.startsWith(m)).forEach(j => { const d = getAcc(j.debit); const c = getAcc(j.credit); if(d.type==='expense') mBalances[j.debit]+=j.amount; if(c.type==='income') mBalances[j.credit]+=j.amount; });
+        state.accounts.forEach(a => { const val = mBalances[a.id]; if(val===0) return;
+          if(a.type === 'income') { iTot += val; iList.innerHTML += `<li class="flex justify-between border-b border-gray-100 pb-2"><span>${a.name}</span><span class="font-bold text-gray-800">${formatJPY(val)}</span></li>`; }
+          if(a.type === 'expense') { eTot += val; eList.innerHTML += `<li class="flex justify-between border-b border-gray-100 pb-2"><span>${a.name}</span><span class="font-bold text-gray-800">${formatJPY(val)}</span></li>`; }
+        });
+        document.getElementById('pl-total-income').innerText = formatJPY(iTot); document.getElementById('pl-total-expense').innerText = formatJPY(eTot); document.getElementById('pl-net-income').innerText = formatJPY(iTot - eTot);
+      }
+      
+      if(currentReportTab === 'bs') {
+        let aTot = 0, lTot = 0; const aList = document.getElementById('bs-assets-list'); aList.innerHTML = ''; const lList = document.getElementById('bs-liab-list'); lList.innerHTML = '';
+        state.accounts.forEach(a => { const val = balances[a.id]; if(val===0) return;
+          if(a.type === 'asset') { aTot += val; aList.innerHTML += `<li class="flex justify-between border-b border-gray-100 pb-2"><span>${a.name}</span><span class="font-bold text-gray-800">${formatJPY(val)}</span></li>`; }
+          if(a.type === 'liability') { lTot += val; lList.innerHTML += `<li class="flex justify-between border-b border-gray-100 pb-2"><span>${a.name}</span><span class="font-bold text-gray-800">${formatJPY(val)}</span></li>`; }
+        });
+        document.getElementById('bs-total-assets').innerText = formatJPY(aTot); document.getElementById('bs-total-liab').innerText = formatJPY(lTot); document.getElementById('bs-total-equity').innerText = formatJPY(aTot - lTot);
+      }
+      
+      if(currentReportTab === 'ledger') {
+        const sel = document.getElementById('ledger-acc-select'); if(sel.options.length === 0) sel.innerHTML = buildAccOptions(['asset','liability','expense','income']);
+        const accId = sel.value; if(!accId) return; const accType = getAcc(accId).type; const tbody = document.getElementById('ledger-tbody'); tbody.innerHTML = ''; let runBal = 0;
+        [...state.journals].sort((a,b)=> new Date(a.date)-new Date(b.date)).filter(j => j.debit === accId || j.credit === accId).forEach(j => {
+          const isDeb = j.debit === accId; const opp = isDeb ? getAcc(j.credit).name : getAcc(j.debit).name;
+          if(accType === 'asset' || accType === 'expense') runBal += isDeb ? j.amount : -j.amount; else runBal += isDeb ? -j.amount : j.amount;
+          tbody.innerHTML += `<tr class="border-b text-xs md:text-sm hover:bg-gray-50 transition"><td class="p-3 text-gray-500 whitespace-nowrap">${j.date.slice(5)}</td><td class="p-3 font-bold text-gray-700">${opp}<div class="text-[10px] text-gray-400 font-normal truncate max-w-[150px] mt-0.5">${j.desc||''}</div></td><td class="p-3 text-right text-blue-600 font-bold">${isDeb?formatJPY(j.amount):''}</td><td class="p-3 text-right text-red-500 font-bold">${!isDeb?formatJPY(j.amount):''}</td><td class="p-3 text-right font-black bg-gray-50">${formatJPY(runBal)}</td></tr>`;
         });
       }
     };
     
-    // ★ 追加機能: 当月の予算更新・繰越・コピー
     window.updateMonthlyBudget = function(month, accId, val) {
       if(!state.monthlyBudgets[month]) state.monthlyBudgets[month] = {};
       state.monthlyBudgets[month][accId] = Math.max(0, parseInt(val, 10) || 0);
@@ -792,10 +816,9 @@
 
     // --- 9. Settings ---
     window.renderSettings = function() {
-      // 予算設定
       const bList = document.getElementById('set-base-budget-list'); bList.innerHTML = '';
       state.accounts.filter(a => a.type === 'expense').forEach(a => {
-        bList.innerHTML += `<li class="flex justify-between items-center py-2 px-2 border-b border-gray-100 last:border-0"><span class="font-bold text-gray-800 text-sm">${a.name}</span><div class="flex items-center"><span class="text-gray-400 mr-2 text-sm">¥</span><input type="number" class="input-field !h-10 !w-28 text-right font-bold text-gray-700 py-1" value="${state.baseBudgets[a.id]||0}" onchange="updateBaseBudget('${a.id}', this.value)"></div></li>`;
+        bList.innerHTML += `<li class="flex justify-between items-center py-2 px-2 border-b border-gray-100 last:border-0"><span class="font-bold text-gray-800 text-sm">${a.name}</span><div class="flex items-center"><span class="text-gray-400 mr-2 text-sm">¥</span><input type="number" class="input-field !h-10 !w-24 sm:!w-32 text-right font-bold text-gray-700 py-1" value="${state.baseBudgets[a.id]||0}" onchange="updateBaseBudget('${a.id}', this.value)"></div></li>`;
       });
 
       const accList = document.getElementById('set-acc-list'); accList.innerHTML = '';
@@ -861,24 +884,43 @@
       reader.readAsText(f);
     };
 
+    // ★ npoint.io へのAPI変更と、確実なオフライン同期コード追加
     window.syncUpload = async function() {
       const btn = document.getElementById('sync-up-btn'); btn.innerHTML = '通信中...'; btn.disabled = true;
       try {
-        const res = await fetch('https://jsonblob.com/api/jsonBlob', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(state) });
-        const id = res.headers.get('Location').split('/').pop();
+        const res = await fetch('https://api.npoint.io/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(state) });
+        if(!res.ok) throw new Error();
+        const data = await res.json();
+        const id = data.id || data.document.split('/').pop();
         document.getElementById('sync-id-display').innerText = id; document.getElementById('sync-result').classList.remove('hidden');
-      } catch(e) { alert('失敗しました'); } finally { btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-1"></i>一時IDを発行'; btn.disabled = false; }
+      } catch(e) { alert('API通信に失敗しました。「方法2：同期コード」をご利用ください。'); } finally { btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-1"></i>一時IDを発行する'; btn.disabled = false; }
     };
     window.syncDownload = async function() {
       const id = document.getElementById('sync-id-input').value.trim(); if(!id) return;
       const btn = document.getElementById('sync-down-btn'); btn.innerHTML = '...'; btn.disabled = true;
       try {
-        const res = await fetch(`https://jsonblob.com/api/jsonBlob/${id}`);
+        const res = await fetch(`https://api.npoint.io/${id}`);
         if(!res.ok) throw new Error();
         const data = await res.json();
         if(data.accounts && data.journals) { state = data; saveData(); alert('復元しました！'); location.reload(); } else throw new Error();
-      } catch(e) { alert('失敗しました。IDを確認してください。'); } finally { btn.innerHTML = '<i class="fa-solid fa-download"></i>'; btn.disabled = false; }
+      } catch(e) { alert('失敗しました。IDが間違っているか、有効期限切れです。'); } finally { btn.innerHTML = '<i class="fa-solid fa-download"></i>'; btn.disabled = false; }
     };
+
+    window.generateSyncCode = function() {
+      try {
+        const b64 = btoa(encodeURIComponent(JSON.stringify(state)));
+        const out = document.getElementById('sync-code-output'); out.value = b64; out.classList.remove('hidden'); out.select(); document.execCommand('copy');
+        alert('同期コードを生成し、クリップボードにコピーしました！\nこれをPC等のLINEやメールに貼り付けてください。');
+      } catch(e) { alert('コード生成に失敗しました。'); }
+    };
+    window.importSyncCode = function() {
+      const code = document.getElementById('sync-code-input').value.trim(); if(!code) return alert('コードを入力してください。');
+      try {
+        const data = JSON.parse(decodeURIComponent(atob(code)));
+        if(data.accounts && data.journals) { state = data; saveData(); alert('復元しました！'); location.reload(); } else throw new Error();
+      } catch(e) { alert('無効な同期コードです。'); }
+    };
+
     window.resetData = function() { if(confirm('本当にすべて削除しますか？')) { localStorage.clear(); location.reload(); } };
     window.exportPDF = function() {
       const element = document.getElementById('report-export-area'); element.classList.add('pdf-exporting');
@@ -891,7 +933,7 @@
       const tm = new Date().toISOString().slice(0, 7); const td = new Date().getDate(); let added = 0;
       state.recurring.forEach(r => {
         if(td >= r.day && r.lastMonth !== tm) {
-          state.journals.push({ id: generateId('j'), date: `${tm}-${String(r.day).padStart(2,'0')}`, debit: r.debit, credit: r.credit, amount: r.amount, desc: r.desc || '自動定期入力' });
+          state.journals.push({ id: generateId('j'), date: `${tm}-${String(r.day).padStart(2,'0')}`, debit: r.debit, credit: r.credit, amount: r.amount, desc: r.desc || '自動定期入力', created: new Date().toISOString() });
           r.lastMonth = tm; added++;
         }
       });

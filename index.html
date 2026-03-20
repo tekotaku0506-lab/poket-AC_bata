@@ -33,14 +33,7 @@
       --sar: env(safe-area-inset-right);
     }
     
-    body { 
-      background-color: var(--bg-color); 
-      color: #333;
-      padding-bottom: calc(90px + var(--sab)); 
-      -webkit-tap-highlight-color: transparent; 
-      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", sans-serif;
-    }
-    
+    body { background-color: var(--bg-color); color: #333; padding-bottom: calc(90px + var(--sab)); -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
     @media (min-width: 768px) { body { padding-bottom: 0; padding-top: 64px; } }
 
     input, select, textarea { font-size: 16px !important; }
@@ -85,7 +78,7 @@
     </div>
     <nav class="flex space-x-2 text-sm font-bold text-gray-500">
       <button onclick="switchTab('dashboard')" class="nav-btn px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition" data-target="dashboard">ホーム</button>
-      <button onclick="switchTab('input')" class="nav-btn px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition" data-target="input">取引登録</button>
+      <button onclick="switchTab('input')" class="nav-btn px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition" data-target="input">入力する</button>
       <button onclick="switchTab('journal')" class="nav-btn px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition" data-target="journal">履歴一覧</button>
       <button onclick="switchTab('report')" class="nav-btn px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition" data-target="report">分析・帳簿</button>
       <button onclick="switchTab('settings')" class="nav-btn px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition" data-target="settings">設定</button>
@@ -97,17 +90,17 @@
       <button onclick="switchTab('dashboard')" class="nav-btn-mobile flex flex-col items-center w-16 py-1 text-gray-400 transition" data-target="dashboard"><i class="fa-solid fa-house text-2xl mb-1"></i><span class="text-[10px] font-bold">ホーム</span></button>
       <button onclick="switchTab('input')" class="nav-btn-mobile flex flex-col items-center w-16 py-1 text-gray-400 transition" data-target="input">
         <div class="bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg -mt-5 border-4 border-white mb-0.5"><i class="fa-solid fa-plus text-xl"></i></div>
-        <span class="text-[10px] font-bold text-blue-600">登録</span>
+        <span class="text-[10px] font-bold text-blue-600">入力</span>
       </button>
       <button onclick="switchTab('journal')" class="nav-btn-mobile flex flex-col items-center w-16 py-1 text-gray-400 transition" data-target="journal"><i class="fa-solid fa-clock-rotate-left text-2xl mb-1"></i><span class="text-[10px] font-bold">履歴</span></button>
-      <button onclick="switchTab('report')" class="nav-btn-mobile flex flex-col items-center w-16 py-1 text-gray-400 transition" data-target="report"><i class="fa-solid fa-chart-simple text-2xl mb-1"></i><span class="text-[10px] font-bold">分析</span></button>
+      <button onclick="switchTab('report')" class="nav-btn-mobile flex flex-col items-center w-16 py-1 text-gray-400 transition" data-target="report"><i class="fa-solid fa-chart-pie text-2xl mb-1"></i><span class="text-[10px] font-bold">分析</span></button>
       <button onclick="switchTab('settings')" class="nav-btn-mobile flex flex-col items-center w-16 py-1 text-gray-400 transition" data-target="settings"><i class="fa-solid fa-gear text-2xl mb-1"></i><span class="text-[10px] font-bold">設定</span></button>
     </div>
   </nav>
 
   <main class="max-w-5xl mx-auto main-safe px-4 sm:px-6">
 
-    <section id="dashboard" class="tab-content">
+    <section id="dashboard" class="tab-content active">
       <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4 mt-2">
         <h2 class="text-3xl font-extrabold text-gray-800 tracking-tight">ホーム概況</h2>
         <input type="month" id="dash-month" class="input-field !h-10 !w-auto text-sm font-bold shadow-sm" onchange="renderDashboard()">
@@ -172,7 +165,7 @@
               <div id="si-transfer-to-box" class="hidden"><label>移動先 (入金先)</label><select id="si-transfer-to" class="input-field shadow-sm bg-white"></select></div>
             </div>
 
-            <div><label>メモ・摘要 (お店や内容)</label><input type="text" id="si-memo" class="input-field shadow-sm" placeholder="例: スーパー、Amazon、お小遣い"></div>
+            <div><label>メモ (お店や内容)</label><input type="text" id="si-memo" class="input-field shadow-sm" placeholder="例: スーパー、Amazon、お小遣い"></div>
 
             <div class="pt-4 flex justify-center">
               <button type="submit" class="btn-primary w-full md:w-auto md:min-w-[300px] !text-lg !py-3 shadow-lg"><i class="fa-solid fa-check mr-2"></i>保存する</button>
@@ -189,7 +182,6 @@
           <select id="filter-month" class="input-field !h-10 !w-auto text-sm font-bold shadow-sm" onchange="renderHistory()"></select>
         </div>
       </div>
-      
       <div class="card !p-0 overflow-hidden shadow-sm">
         <div id="history-list" class="divide-y divide-gray-100 max-h-[70vh] overflow-y-auto hide-scroll pb-10"></div>
       </div>
@@ -197,21 +189,72 @@
 
     <section id="report" class="tab-content">
       <div class="flex justify-between items-center mb-6 mt-2">
-        <h2 class="text-3xl font-extrabold text-gray-800 tracking-tight">分析・帳簿</h2>
-        <button onclick="exportPDF()" class="btn-secondary !text-red-600 !border-red-200 !bg-red-50 hover:!bg-red-100 !py-2 !px-4 !text-sm"><i class="fa-solid fa-file-pdf mr-2"></i>PDF出力</button>
+        <h2 class="text-3xl font-extrabold text-gray-800 tracking-tight">分析・レポート</h2>
+        <button onclick="exportPDF()" class="btn-secondary !text-red-600 !border-red-200 !bg-red-50 hover:!bg-red-100 !py-2 !px-3 !text-xs"><i class="fa-solid fa-file-pdf mr-1"></i>PDF</button>
       </div>
       
       <div class="flex space-x-2 mb-6 overflow-x-auto hide-scroll pb-2">
-        <button onclick="switchReportTab('budget')" id="rtab-budget" class="btn-primary !px-4 !py-2 !rounded-lg !text-sm whitespace-nowrap shadow-sm">予算管理</button>
-        <button onclick="switchReportTab('summary')" id="rtab-summary" class="btn-secondary !px-4 !py-2 !rounded-lg !text-sm whitespace-nowrap !border-gray-200 shadow-sm">年間グラフ</button>
-        <button onclick="switchReportTab('pl')" id="rtab-pl" class="btn-secondary !px-4 !py-2 !rounded-lg !text-sm whitespace-nowrap !border-gray-200 shadow-sm">今月の収支</button>
+        <button onclick="switchReportTab('monthly')" id="rtab-monthly" class="btn-primary !px-4 !py-2 !rounded-lg !text-sm whitespace-nowrap shadow-sm">マンスリーレポート</button>
+        <button onclick="switchReportTab('budget')" id="rtab-budget" class="btn-secondary !px-4 !py-2 !rounded-lg !text-sm whitespace-nowrap !border-gray-200 shadow-sm">予実分析</button>
+        <button onclick="switchReportTab('annual')" id="rtab-annual" class="btn-secondary !px-4 !py-2 !rounded-lg !text-sm whitespace-nowrap !border-gray-200 shadow-sm">年間グラフ</button>
         <button onclick="switchReportTab('bs')" id="rtab-bs" class="btn-secondary !px-4 !py-2 !rounded-lg !text-sm whitespace-nowrap !border-gray-200 shadow-sm">資産と負債</button>
         <button onclick="switchReportTab('ledger')" id="rtab-ledger" class="btn-secondary !px-4 !py-2 !rounded-lg !text-sm whitespace-nowrap !border-gray-200 shadow-sm">口座別履歴</button>
       </div>
 
       <div id="report-export-area" class="rounded-xl">
         
-        <div id="report-budget" class="report-view block">
+        <div id="report-monthly" class="report-view block">
+          <div class="card shadow-sm !p-5 md:!p-8">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b pb-4 gap-4">
+              <h3 class="text-xl font-black text-gray-800"><i class="fa-solid fa-chart-pie text-blue-500 mr-2"></i>当月のサマリー</h3>
+              <input type="month" id="rep-monthly-month" class="input-field !h-10 !w-auto text-sm font-bold shadow-sm" onchange="renderReports()">
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+              <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                <p class="text-xs font-bold text-blue-800 mb-1">当月収入</p>
+                <div class="flex justify-between items-end">
+                  <p class="text-2xl font-black text-blue-600" id="rm-inc">¥0</p>
+                  <p class="text-xs font-bold" id="rm-inc-diff"></p>
+                </div>
+              </div>
+              <div class="bg-orange-50 p-4 rounded-xl border border-orange-100">
+                <p class="text-xs font-bold text-orange-800 mb-1">当月支出</p>
+                <div class="flex justify-between items-end">
+                  <p class="text-2xl font-black text-orange-600" id="rm-exp">¥0</p>
+                  <p class="text-xs font-bold" id="rm-exp-diff"></p>
+                </div>
+              </div>
+              <div class="bg-green-50 p-4 rounded-xl border border-green-100">
+                <p class="text-xs font-bold text-green-800 mb-1">残金 (利益)</p>
+                <div class="flex justify-between items-end">
+                  <p class="text-2xl font-black text-green-600" id="rm-net">¥0</p>
+                  <p class="text-xs font-bold" id="rm-net-diff"></p>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div>
+                <h4 class="font-bold text-gray-700 mb-4 border-b pb-2 text-center">支出構成比</h4>
+                <div class="h-64 relative"><canvas id="rm-expense-chart"></canvas></div>
+              </div>
+              <div>
+                <h4 class="font-bold text-gray-700 mb-4 border-b pb-2">取引内容のサマリ (大きい順)</h4>
+                <div class="overflow-y-auto max-h-64 hide-scroll border rounded-xl shadow-inner">
+                  <table class="w-full text-sm text-left">
+                    <thead class="text-xs text-gray-500 uppercase bg-gray-50 sticky top-0">
+                      <tr><th class="p-3">区分</th><th class="p-3">カテゴリ</th><th class="p-3 text-right">金額</th></tr>
+                    </thead>
+                    <tbody id="rm-summary-tbody" class="divide-y divide-gray-100 bg-white"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="report-budget" class="report-view hidden">
           <div class="card shadow-sm !p-5 md:!p-8">
             <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 border-b pb-4 gap-4">
               <h3 class="text-lg font-bold text-gray-700"><i class="fa-solid fa-bullseye text-blue-500 mr-2"></i><span id="budget-month-display">表示月</span>の予算消化状況</h3>
@@ -234,31 +277,13 @@
           </div>
         </div>
 
-        <div id="report-summary" class="report-view hidden">
+        <div id="report-annual" class="report-view hidden">
           <div class="card shadow-sm">
-            <div class="flex justify-between items-center mb-6">
+            <div class="flex justify-between items-center mb-6 border-b pb-4">
               <h3 class="font-bold text-gray-800 text-lg">月別 収支トレンド</h3>
               <input type="number" id="rep-year" class="input-field !h-10 !w-24 text-base font-bold text-center shadow-sm" onchange="renderReports()">
             </div>
             <div class="h-80 relative"><canvas id="annualTrendChart"></canvas></div>
-          </div>
-        </div>
-
-        <div id="report-pl" class="report-view hidden">
-          <div class="card shadow-sm max-w-3xl mx-auto !p-6 md:!p-8">
-            <div class="flex justify-between items-center mb-6 border-b pb-4">
-              <h3 class="font-black text-gray-800 text-xl">指定月の収支</h3>
-              <input type="month" id="pl-month" class="input-field !h-10 !w-auto text-sm font-bold" onchange="renderReports()">
-            </div>
-            <h4 class="font-bold text-base text-blue-700 mb-3"><i class="fa-solid fa-arrow-down mr-2"></i>収入</h4>
-            <ul id="pl-income-list" class="space-y-2 mb-4 text-sm px-2"></ul>
-            <div class="flex justify-between font-bold text-gray-800 text-base mb-8 bg-blue-50 p-3 rounded-lg"><span>収入合計</span><span id="pl-total-income" class="text-blue-700">¥0</span></div>
-            
-            <h4 class="font-bold text-base text-orange-700 mb-3"><i class="fa-solid fa-arrow-up mr-2"></i>支出</h4>
-            <ul id="pl-expense-list" class="space-y-2 mb-4 text-sm px-2"></ul>
-            <div class="flex justify-between font-bold text-gray-800 text-base mb-8 bg-orange-50 p-3 rounded-lg"><span>支出合計</span><span id="pl-total-expense" class="text-orange-700">¥0</span></div>
-            
-            <div class="flex justify-between font-black text-xl pt-4 border-t-2 border-gray-800"><span>残金 (利益)</span><span id="pl-net-income">¥0</span></div>
           </div>
         </div>
 
@@ -284,7 +309,7 @@
 
         <div id="report-ledger" class="report-view hidden">
           <div class="card shadow-sm !p-0 overflow-hidden">
-            <div class="p-5 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div class="p-6 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div class="flex items-center gap-3 w-full md:w-auto">
                 <select id="ledger-acc-select" class="input-field !h-10 !w-auto text-sm font-bold shadow-sm" onchange="renderReports()"></select>
                 <span class="text-sm font-bold text-gray-600">の履歴</span>
@@ -309,14 +334,14 @@
       
       <div class="card shadow-sm mb-6">
         <h3 class="text-lg font-bold mb-3 text-gray-800 border-b pb-2"><i class="fa-solid fa-bullseye text-blue-500 mr-2"></i>基本予算の設定 (毎月のデフォルト)</h3>
-        <p class="text-xs text-gray-500 mb-4">毎月の基準となる予算を設定します。特定の月だけ変更したい場合は「分析・帳簿」の「予算管理」タブをご利用ください。</p>
+        <p class="text-xs text-gray-500 mb-4">毎月の基準となる予算を設定します。特定の月だけ変更したい場合は「分析」の「予実分析」タブをご利用ください。</p>
         <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
           <ul id="set-base-budget-list" class="space-y-2 max-h-48 overflow-y-auto pr-2 hide-scroll"></ul>
         </div>
       </div>
 
       <div class="card shadow-sm mb-6">
-        <h3 class="text-lg font-bold mb-3 text-gray-800 border-b pb-2"><i class="fa-solid fa-clock-rotate-left text-blue-500 mr-2"></i>定期入力ルール (家賃・給与など)</h3>
+        <h3 class="text-lg font-bold mb-3 text-gray-800 border-b pb-2"><i class="fa-solid fa-clock-rotate-left text-blue-500 mr-2"></i>定期入力ルール (家賃・サブスク等)</h3>
         <form onsubmit="addRecurring(event)" class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-4">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
             <div class="flex items-center bg-white border border-gray-300 rounded-lg h-10 px-3 focus-within:ring-2 focus-within:ring-blue-500">
@@ -330,7 +355,7 @@
             <div><label class="!mb-1">カテゴリ</label><select id="r-category" class="input-field !h-10 text-sm" required></select></div>
           </div>
           <div><label class="!mb-1">メモ (摘要)</label><input type="text" id="r-memo" class="input-field !h-10 text-sm" placeholder="例: 家賃引き落とし"></div>
-          <div class="mt-3 text-right"><button type="submit" class="btn-primary !px-6 !py-2 !text-sm"><i class="fa-solid fa-plus mr-1"></i>追加</button></div>
+          <div class="mt-3 text-right"><button type="submit" class="btn-primary !px-6 !py-2 !text-sm"><i class="fa-solid fa-plus mr-1"></i>ルール追加</button></div>
         </form>
         <ul id="set-rec-list" class="space-y-2 max-h-48 overflow-y-auto pr-2 hide-scroll"></ul>
       </div>
@@ -354,7 +379,6 @@
         
         <div class="bg-white p-4 rounded-xl shadow-sm mb-4 border border-blue-50">
           <h4 class="font-bold text-gray-700 mb-2 text-sm"><i class="fa-solid fa-cloud-arrow-up mr-1 text-blue-500"></i>方法1：クラウド経由で同期 (一時ID発行)</h4>
-          <p class="text-xs text-gray-500 mb-3">クラウドにデータを預け、別の端末でIDを入力して復元します。</p>
           <div class="flex flex-col md:flex-row gap-4 mt-3">
             <div class="flex-1">
               <button onclick="syncUpload()" id="sync-up-btn" class="w-full bg-blue-600 text-white font-bold rounded-lg px-3 py-2 hover:bg-blue-700 transition text-sm active:scale-95"><i class="fa-solid fa-cloud-arrow-up mr-1"></i>一時IDを発行する</button>
@@ -372,11 +396,10 @@
         </div>
 
         <div class="bg-white p-4 rounded-xl shadow-sm mb-4 border border-gray-100">
-          <h4 class="font-bold text-gray-700 mb-2 text-sm"><i class="fa-solid fa-paste mr-1 text-gray-500"></i>方法2：同期コードで確実に行う (オフライン対応)</h4>
-          <p class="text-xs text-gray-500 mb-3">外部通信を使わない最も確実な方法です。出力された文字列をLINEやメールで送り、別端末に貼り付けます。</p>
-          <div class="flex flex-col md:flex-row gap-4">
+          <h4 class="font-bold text-gray-700 mb-2 text-sm"><i class="fa-solid fa-paste mr-1 text-gray-500"></i>方法2：同期コードで確実に行う</h4>
+          <div class="flex flex-col md:flex-row gap-4 mt-3">
             <div class="flex-1">
-              <button onclick="generateSyncCode()" class="w-full bg-gray-800 text-white font-bold rounded-lg px-3 py-2 hover:bg-gray-900 transition text-sm active:scale-95">同期コードを出力</button>
+              <button onclick="generateSyncCode()" class="w-full bg-gray-800 text-white font-bold rounded-lg px-3 py-2 hover:bg-gray-900 transition text-sm active:scale-95">同期コードをコピー</button>
             </div>
             <div class="flex-1">
               <div class="flex gap-2">
@@ -432,7 +455,7 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'poket_kakeibo_v4'; // 新規設計用クリーンキー
+    const STORAGE_KEY = 'poket_kakeibo_v5'; 
     
     const defaultAccounts = [
       { id: 'a1', name: '財布 (現金)', type: 'asset' }, { id: 'a2', name: 'メイン口座', type: 'asset' },
@@ -515,13 +538,11 @@
     window.switchInputMode = function(mode) {
       currentInputMode = mode;
       document.getElementById('si-mode').value = mode;
-      
       const btnExp = document.getElementById('mode-expense'); const btnInc = document.getElementById('mode-income'); const btnTrf = document.getElementById('mode-transfer');
       [btnExp, btnInc, btnTrf].forEach(b => { b.className = 'flex-1 py-2.5 text-sm font-bold rounded-lg text-gray-500 hover:text-gray-800 transition'; });
 
       const accSelect = document.getElementById('si-account'); const catSelect = document.getElementById('si-category'); const toSelect = document.getElementById('si-transfer-to');
       const toBox = document.getElementById('si-transfer-to-box'); const catBox = document.getElementById('si-category-box');
-      
       if(!document.getElementById('si-date').value) document.getElementById('si-date').value = new Date().toISOString().slice(0, 10);
 
       if (mode === 'expense') {
@@ -547,7 +568,6 @@
       const mode = document.getElementById('si-mode').value; const date = document.getElementById('si-date').value; const amount = parseInt(document.getElementById('si-amount').value, 10);
       const accId = document.getElementById('si-account').value; const memo = document.getElementById('si-memo').value.trim();
       let debit, credit;
-
       if (mode === 'expense') { debit = document.getElementById('si-category').value; credit = accId; } 
       else if (mode === 'income') { debit = accId; credit = document.getElementById('si-category').value; } 
       else if (mode === 'transfer') { debit = document.getElementById('si-transfer-to').value; credit = accId; }
@@ -680,12 +700,13 @@
       if(confirm('完全に削除しますか？')) { state.journals = state.journals.filter(j => String(j.id) !== String(id)); saveData(); renderHistory(); renderDashboard(); }
     };
 
-    let currentReportTab = 'budget';
+    // --- Reports ---
+    let currentReportTab = 'monthly';
     window.switchReportTab = function(tabId) {
       currentReportTab = tabId;
       document.querySelectorAll('.report-view').forEach(el => el.classList.add('hidden'));
       document.getElementById('report-' + tabId).classList.remove('hidden');
-      ['rtab-budget', 'rtab-summary', 'rtab-pl', 'rtab-bs', 'rtab-ledger'].forEach(id => {
+      ['rtab-monthly', 'rtab-budget', 'rtab-annual', 'rtab-bs', 'rtab-ledger'].forEach(id => {
         const btn = document.getElementById(id); if(!btn) return;
         if(id === 'rtab-' + tabId) { btn.className = 'btn-primary !px-4 !py-2 !rounded-lg !text-sm whitespace-nowrap shadow-sm transition'; } 
         else { btn.className = 'btn-secondary !px-4 !py-2 !rounded-lg !text-sm whitespace-nowrap !border-gray-200 shadow-sm transition'; }
@@ -695,6 +716,59 @@
 
     window.renderReports = function() {
       const balances = calcBalances();
+      
+      if(currentReportTab === 'monthly') {
+        const mInput = document.getElementById('rep-monthly-month');
+        if(!mInput.value) mInput.value = new Date().toISOString().slice(0, 7);
+        const targetM = mInput.value;
+        const d = new Date(targetM + '-01'); d.setMonth(d.getMonth() - 1);
+        const prevM = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+
+        let curInc=0, curExp=0, prvInc=0, prvExp=0;
+        let expByMajor = {}; let incByMajor = {};
+        
+        state.journals.forEach(j => {
+          const dAcc = getAcc(j.debit); const cAcc = getAcc(j.credit);
+          if(j.date.startsWith(targetM)) {
+            if(dAcc.type === 'expense') { curExp += j.amount; expByMajor[dAcc.name] = (expByMajor[dAcc.name]||0) + j.amount; }
+            if(cAcc.type === 'income') { curInc += j.amount; incByMajor[cAcc.name] = (incByMajor[cAcc.name]||0) + j.amount; }
+          } else if(j.date.startsWith(prevM)) {
+            if(dAcc.type === 'expense') prvExp += j.amount;
+            if(cAcc.type === 'income') prvInc += j.amount;
+          }
+        });
+
+        document.getElementById('rm-inc').innerText = formatJPY(curInc);
+        document.getElementById('rm-exp').innerText = formatJPY(curExp);
+        document.getElementById('rm-net').innerText = formatJPY(curInc - curExp);
+
+        const diffInc = curInc - prvInc; const diffExp = curExp - prvExp; const diffNet = (curInc - curExp) - (prvInc - prvExp);
+        const formatDiff = (num, isExp) => {
+          if(num===0) return '<span class="text-gray-400">前月と同額</span>';
+          if(num>0) return `<span class="${isExp?'text-red-500':'text-blue-500'}"><i class="fa-solid fa-arrow-trend-up mr-1"></i>+${num.toLocaleString()}</span>`;
+          return `<span class="${isExp?'text-green-500':'text-red-500'}"><i class="fa-solid fa-arrow-trend-down mr-1"></i>${num.toLocaleString()}</span>`;
+        };
+        document.getElementById('rm-inc-diff').innerHTML = formatDiff(diffInc, false);
+        document.getElementById('rm-exp-diff').innerHTML = formatDiff(diffExp, true);
+        document.getElementById('rm-net-diff').innerHTML = formatDiff(diffNet, false);
+
+        // Chart
+        const ctx = document.getElementById('rm-expense-chart').getContext('2d'); if(window.rmChart) window.rmChart.destroy();
+        const labels = Object.keys(expByMajor).sort((a,b)=>expByMajor[b]-expByMajor[a]);
+        const data = labels.map(l => expByMajor[l]);
+        if(labels.length > 0) {
+          window.rmChart = new Chart(ctx, { type: 'doughnut', data: { labels, datasets: [{ data, backgroundColor: ['#F97316','#3B82F6','#10B981','#8B5CF6','#EF4444','#F59E0B','#6366F1'], borderWidth: 2, borderColor: '#fff' }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'right', labels:{boxWidth:12, font:{size:11}} } } } });
+        }
+
+        // Summary Table
+        const tbody = document.getElementById('rm-summary-tbody'); tbody.innerHTML = '';
+        Object.keys(incByMajor).sort((a,b)=>incByMajor[b]-incByMajor[a]).forEach(k => {
+          tbody.innerHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-3"><span class="px-2 py-1 bg-blue-100 text-blue-800 text-[10px] rounded font-bold">収入</span></td><td class="p-3 font-bold">${k}</td><td class="p-3 text-right text-blue-600 font-bold">${formatJPY(incByMajor[k])}</td></tr>`;
+        });
+        Object.keys(expByMajor).sort((a,b)=>expByMajor[b]-expByMajor[a]).forEach(k => {
+          tbody.innerHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-3"><span class="px-2 py-1 bg-orange-100 text-orange-800 text-[10px] rounded font-bold">支出</span></td><td class="p-3 font-bold">${k}</td><td class="p-3 text-right text-gray-700 font-medium">${formatJPY(expByMajor[k])}</td></tr>`;
+        });
+      }
       
       if(currentReportTab === 'budget') {
         const m = document.getElementById('budget-month').value || new Date().toISOString().slice(0,7); 
@@ -724,7 +798,7 @@
         });
       }
       
-      if(currentReportTab === 'summary') {
+      if(currentReportTab === 'annual') {
         let year = document.getElementById('rep-year').value; if(!year) { year = new Date().getFullYear(); document.getElementById('rep-year').value = year; }
         let inc = new Array(12).fill(0); let exp = new Array(12).fill(0);
         state.journals.forEach(j => {
@@ -735,18 +809,6 @@
         });
         const ctx = document.getElementById('annualTrendChart').getContext('2d'); if(window.trendChart) window.trendChart.destroy();
         window.trendChart = new Chart(ctx, { type: 'bar', data: { labels: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'], datasets: [{label: '収入', data: inc, backgroundColor: '#3B82F6', borderRadius:4}, {label: '支出', data: exp, backgroundColor: '#F97316', borderRadius:4}] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } });
-      }
-      
-      if(currentReportTab === 'pl') {
-        let m = document.getElementById('pl-month').value; if(!m) { m = new Date().toISOString().slice(0,7); document.getElementById('pl-month').value = m; }
-        let iTot = 0, eTot = 0; const iList = document.getElementById('pl-income-list'); iList.innerHTML = ''; const eList = document.getElementById('pl-expense-list'); eList.innerHTML = '';
-        const mBalances = {}; state.accounts.forEach(a => mBalances[a.id] = 0);
-        state.journals.filter(j => j.date.startsWith(m)).forEach(j => { const d = getAcc(j.debit); const c = getAcc(j.credit); if(d.type==='expense') mBalances[j.debit]+=j.amount; if(c.type==='income') mBalances[j.credit]+=j.amount; });
-        state.accounts.forEach(a => { const val = mBalances[a.id]; if(val===0) return;
-          if(a.type === 'income') { iTot += val; iList.innerHTML += `<li class="flex justify-between border-b border-gray-100 pb-2"><span>${a.name}</span><span class="font-bold text-gray-800">${formatJPY(val)}</span></li>`; }
-          if(a.type === 'expense') { eTot += val; eList.innerHTML += `<li class="flex justify-between border-b border-gray-100 pb-2"><span>${a.name}</span><span class="font-bold text-gray-800">${formatJPY(val)}</span></li>`; }
-        });
-        document.getElementById('pl-total-income').innerText = formatJPY(iTot); document.getElementById('pl-total-expense').innerText = formatJPY(eTot); document.getElementById('pl-net-income').innerText = formatJPY(iTot - eTot);
       }
       
       if(currentReportTab === 'bs') {
@@ -818,7 +880,7 @@
     window.renderSettings = function() {
       const bList = document.getElementById('set-base-budget-list'); bList.innerHTML = '';
       state.accounts.filter(a => a.type === 'expense').forEach(a => {
-        bList.innerHTML += `<li class="flex justify-between items-center py-2 px-2 border-b border-gray-100 last:border-0"><span class="font-bold text-gray-800 text-sm">${a.name}</span><div class="flex items-center"><span class="text-gray-400 mr-2 text-sm">¥</span><input type="number" class="input-field !h-10 !w-24 sm:!w-32 text-right font-bold text-gray-700 py-1" value="${state.baseBudgets[a.id]||0}" onchange="updateBaseBudget('${a.id}', this.value)"></div></li>`;
+        bList.innerHTML += `<li class="flex justify-between items-center py-2 px-2 border-b border-gray-100 last:border-0"><span class="font-bold text-gray-800 text-sm">${a.name}</span><div class="flex items-center"><span class="text-gray-400 mr-2 text-sm">¥</span><input type="number" class="input-field !h-10 !w-28 sm:!w-32 text-right font-bold text-gray-700 py-1" value="${state.baseBudgets[a.id]||0}" onchange="updateBaseBudget('${a.id}', this.value)"></div></li>`;
       });
 
       const accList = document.getElementById('set-acc-list'); accList.innerHTML = '';
@@ -834,22 +896,17 @@
       document.getElementById('r-account').innerHTML = buildAccOptions(['asset','liability']); document.getElementById('r-category').innerHTML = buildAccOptions(['expense','income','asset']);
     };
 
-    window.updateBaseBudget = function(id, val) {
-      state.baseBudgets[id] = Math.max(0, parseInt(val, 10)||0); saveData();
-    };
-
+    window.updateBaseBudget = function(id, val) { state.baseBudgets[id] = Math.max(0, parseInt(val, 10)||0); saveData(); };
     window.addAccount = function(e) {
       e.preventDefault(); const name = document.getElementById('new-acc-name').value.trim(); const type = document.getElementById('new-acc-type').value;
       if(state.accounts.some(a => a.name === name)) return alert("同名が存在します");
       state.accounts.push({ id: generateId(type.charAt(0)), name, type }); saveData(); document.getElementById('new-acc-name').value = ''; renderSettings();
     };
-    
     window.deleteAccount = function(id) {
       if(state.journals.some(j => j.debit === id || j.credit === id)) return alert('使用中のため削除できません');
       if(confirm('削除しますか？')){ 
         state.accounts = state.accounts.filter(a => String(a.id) !== String(id)); 
-        delete state.baseBudgets[id];
-        Object.keys(state.monthlyBudgets).forEach(m => delete state.monthlyBudgets[m][id]);
+        delete state.baseBudgets[id]; Object.keys(state.monthlyBudgets).forEach(m => delete state.monthlyBudgets[m][id]);
         saveData(); renderSettings(); 
       }
     };
@@ -884,14 +941,11 @@
       reader.readAsText(f);
     };
 
-    // ★ npoint.io へのAPI変更と、確実なオフライン同期コード追加
     window.syncUpload = async function() {
       const btn = document.getElementById('sync-up-btn'); btn.innerHTML = '通信中...'; btn.disabled = true;
       try {
         const res = await fetch('https://api.npoint.io/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(state) });
-        if(!res.ok) throw new Error();
-        const data = await res.json();
-        const id = data.id || data.document.split('/').pop();
+        if(!res.ok) throw new Error(); const data = await res.json(); const id = data.id || data.document.split('/').pop();
         document.getElementById('sync-id-display').innerText = id; document.getElementById('sync-result').classList.remove('hidden');
       } catch(e) { alert('API通信に失敗しました。「方法2：同期コード」をご利用ください。'); } finally { btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-1"></i>一時IDを発行する'; btn.disabled = false; }
     };
@@ -900,8 +954,7 @@
       const btn = document.getElementById('sync-down-btn'); btn.innerHTML = '...'; btn.disabled = true;
       try {
         const res = await fetch(`https://api.npoint.io/${id}`);
-        if(!res.ok) throw new Error();
-        const data = await res.json();
+        if(!res.ok) throw new Error(); const data = await res.json();
         if(data.accounts && data.journals) { state = data; saveData(); alert('復元しました！'); location.reload(); } else throw new Error();
       } catch(e) { alert('失敗しました。IDが間違っているか、有効期限切れです。'); } finally { btn.innerHTML = '<i class="fa-solid fa-download"></i>'; btn.disabled = false; }
     };

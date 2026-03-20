@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="theme-color" content="#F3F4F6">
   
-  <title>Poket AC - 家計簿</title>
+  <title>Poket AC - スマート家計簿</title>
   
   <script>
     const originalWarn = console.warn;
@@ -36,49 +36,44 @@
     body { 
       background-color: var(--bg-color); 
       color: #333;
-      /* iPhoneのホームバー被り防止: ボトムナビの高さ(約70px) + セーフエリア分の余白 */
-      padding-bottom: calc(85px + var(--sab)); 
+      padding-bottom: calc(90px + var(--sab)); 
       -webkit-tap-highlight-color: transparent; 
       font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", sans-serif;
     }
     
     @media (min-width: 768px) { body { padding-bottom: 0; padding-top: 64px; } }
 
-    /* モバイルSafariでの意図しないズームを防ぐため、16pxを強制 */
     input, select, textarea { font-size: 16px !important; }
 
-    /* タブの切り替えとアニメーション */
     .tab-content { display: none; opacity: 0; transition: opacity 0.2s ease; }
     .tab-content.active { display: block; opacity: 1; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
     @keyframes slideUp { from { transform: translateY(15px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-    /* 共通コンポーネント (余白ゆったり) */
     .card { background: #ffffff; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #EAECEF; padding: 24px; margin-bottom: 24px; }
     
-    .btn-primary { background-color: var(--brand-main); color: white; border-radius: 12px; font-weight: bold; padding: 14px 24px; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,90,158,0.2); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+    .btn-primary { background-color: var(--brand-main); color: white; border-radius: 12px; font-weight: bold; padding: 12px 24px; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,90,158,0.2); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
     .btn-primary:active { transform: scale(0.96); box-shadow: none; }
     
-    .btn-secondary { background-color: white; color: #4B5563; border: 1px solid #D1D5DB; border-radius: 12px; font-weight: bold; padding: 14px 24px; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+    .btn-secondary { background-color: white; color: #4B5563; border: 1px solid #D1D5DB; border-radius: 12px; font-weight: bold; padding: 12px 24px; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
     .btn-secondary:active { transform: scale(0.96); background-color: #F9FAFB; }
     
-    .btn-icon { width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius: 12px; transition: all 0.2s; cursor: pointer; }
+    .btn-icon { width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; transition: all 0.2s; cursor: pointer; }
     .btn-icon:active { transform: scale(0.92); }
     
-    .input-field { width: 100%; height: 50px; border: 1px solid #D1D5DB; border-radius: 10px; padding: 0 16px; background-color: #ffffff; transition: all 0.2s; box-sizing: border-box; font-weight: 500; }
+    .input-field { width: 100%; height: 48px; border: 1px solid #D1D5DB; border-radius: 10px; padding: 0 16px; background-color: #ffffff; transition: all 0.2s; box-sizing: border-box; font-weight: 500; }
     .input-field:focus { outline: none; border-color: var(--brand-main); box-shadow: 0 0 0 4px var(--brand-light); }
-    label { display: block; font-size: 0.85rem; font-weight: 700; color: #6B7280; margin-bottom: 8px; }
+    label { display: block; font-size: 0.85rem; font-weight: 700; color: #6B7280; margin-bottom: 6px; }
 
-    /* 取引リスト (きっぷUI風) */
-    .record-row { display: flex; flex-direction: column; padding: 20px; border-bottom: 1px solid #F3F4F6; background: white; transition: background 0.2s; }
+    .record-row { display: flex; flex-direction: column; padding: 16px 20px; border-bottom: 1px solid #F3F4F6; background: white; transition: background 0.2s; }
     .record-row:hover { background: #F9FAFB; }
     @media (min-width: 640px) { .record-row { flex-direction: row; align-items: center; justify-content: space-between; } }
     
     .hide-scroll::-webkit-scrollbar { display: none; }
     .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
 
-    /* セーフエリアパディング */
     .main-safe { padding-left: max(1.5rem, var(--sal)); padding-right: max(1.5rem, var(--sar)); padding-top: max(1.5rem, var(--sat)); }
     .modal-pb-safe { padding-bottom: max(1.5rem, var(--sab)); }
+    .pdf-exporting { background-color: white !important; padding: 20px !important; }
   </style>
 </head>
 <body>
@@ -90,7 +85,7 @@
     </div>
     <nav class="flex space-x-2 text-sm font-bold text-gray-500">
       <button onclick="switchTab('dashboard')" class="nav-btn px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition" data-target="dashboard">ホーム</button>
-      <button onclick="switchTab('input')" class="nav-btn px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition" data-target="input">入力する</button>
+      <button onclick="switchTab('input')" class="nav-btn px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition" data-target="input">取引登録</button>
       <button onclick="switchTab('journal')" class="nav-btn px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition" data-target="journal">履歴一覧</button>
       <button onclick="switchTab('report')" class="nav-btn px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition" data-target="report">分析・帳簿</button>
       <button onclick="switchTab('settings')" class="nav-btn px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition" data-target="settings">設定</button>
@@ -102,7 +97,7 @@
       <button onclick="switchTab('dashboard')" class="nav-btn-mobile flex flex-col items-center w-16 py-1 text-gray-400 transition" data-target="dashboard"><i class="fa-solid fa-house text-2xl mb-1"></i><span class="text-[10px] font-bold">ホーム</span></button>
       <button onclick="switchTab('input')" class="nav-btn-mobile flex flex-col items-center w-16 py-1 text-gray-400 transition" data-target="input">
         <div class="bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg -mt-5 border-4 border-white mb-0.5"><i class="fa-solid fa-plus text-xl"></i></div>
-        <span class="text-[10px] font-bold text-blue-600">入力</span>
+        <span class="text-[10px] font-bold text-blue-600">登録</span>
       </button>
       <button onclick="switchTab('journal')" class="nav-btn-mobile flex flex-col items-center w-16 py-1 text-gray-400 transition" data-target="journal"><i class="fa-solid fa-clock-rotate-left text-2xl mb-1"></i><span class="text-[10px] font-bold">履歴</span></button>
       <button onclick="switchTab('report')" class="nav-btn-mobile flex flex-col items-center w-16 py-1 text-gray-400 transition" data-target="report"><i class="fa-solid fa-chart-simple text-2xl mb-1"></i><span class="text-[10px] font-bold">分析</span></button>
@@ -113,75 +108,74 @@
   <main class="max-w-5xl mx-auto main-safe px-4 sm:px-6">
 
     <section id="dashboard" class="tab-content">
-      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4 mt-2">
-        <h2 class="text-3xl font-extrabold text-gray-800 tracking-tight">ホーム</h2>
-        <input type="month" id="dash-month" class="input-field !h-12 !w-auto text-base font-bold shadow-sm" onchange="renderDashboard()">
+      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4 mt-2">
+        <h2 class="text-3xl font-extrabold text-gray-800 tracking-tight">ホーム概況</h2>
+        <input type="month" id="dash-month" class="input-field !h-10 !w-auto text-sm font-bold shadow-sm" onchange="renderDashboard()">
       </div>
 
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-8">
-        <div class="card !p-5 md:!p-6 !mb-0 border-l-4 border-l-blue-500">
-          <p class="text-xs font-bold text-gray-500 mb-2">現在の資産 (財布・口座)</p>
+        <div class="card !p-5 !mb-0 border-l-4 border-l-blue-500">
+          <p class="text-xs font-bold text-gray-500 mb-1">現在の資産 (口座/財布)</p>
           <p class="text-xl md:text-2xl font-black text-gray-800" id="dash-assets">¥0</p>
         </div>
-        <div class="card !p-5 md:!p-6 !mb-0 border-l-4 border-l-red-400">
-          <p class="text-xs font-bold text-gray-500 mb-2">負債 (カード未払金)</p>
+        <div class="card !p-5 !mb-0 border-l-4 border-l-red-400">
+          <p class="text-xs font-bold text-gray-500 mb-1">負債残高 (カード等)</p>
           <p class="text-xl md:text-2xl font-black text-red-600" id="dash-liabilities">¥0</p>
         </div>
-        <div class="card !p-5 md:!p-6 !mb-0 bg-blue-50 !border-blue-100">
-          <p class="text-xs font-bold text-blue-800 mb-2">今月の収入</p>
+        <div class="card !p-5 !mb-0 bg-blue-50 !border-blue-100">
+          <p class="text-xs font-bold text-blue-800 mb-1">表示月の収入</p>
           <p class="text-xl md:text-2xl font-black text-blue-600" id="dash-income">¥0</p>
         </div>
-        <div class="card !p-5 md:!p-6 !mb-0 bg-orange-50 !border-orange-100">
-          <p class="text-xs font-bold text-orange-800 mb-2">今月の支出</p>
+        <div class="card !p-5 !mb-0 bg-orange-50 !border-orange-100">
+          <p class="text-xs font-bold text-orange-800 mb-1">表示月の支出</p>
           <p class="text-xl md:text-2xl font-black text-orange-600" id="dash-expense">¥0</p>
         </div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
         <div class="lg:col-span-2 card">
-          <div class="flex justify-between items-center mb-6 border-b pb-4">
-            <h3 class="font-bold text-lg text-gray-800">最近の記録</h3>
-            <button onclick="switchTab('journal')" class="text-sm text-blue-600 font-bold hover:bg-blue-50 px-3 py-1.5 rounded-lg transition">すべて見る</button>
+          <div class="flex justify-between items-center mb-4 border-b pb-3">
+            <h3 class="font-bold text-lg text-gray-800">最近の取引</h3>
+            <button onclick="switchTab('journal')" class="text-xs text-blue-600 font-bold hover:bg-blue-50 px-3 py-1.5 rounded-lg transition">すべて見る</button>
           </div>
-          <div id="dash-recent-list" class="space-y-2">
-            </div>
+          <div id="dash-recent-list" class="space-y-2"></div>
         </div>
         <div class="card">
-          <h3 class="font-bold text-lg text-gray-800 mb-6 border-b pb-4">今月の支出割合</h3>
+          <h3 class="font-bold text-lg text-gray-800 mb-4 border-b pb-3">表示月の支出割合</h3>
           <div class="h-56 relative"><canvas id="dashExpenseChart"></canvas></div>
         </div>
       </div>
     </section>
 
     <section id="input" class="tab-content">
-      <h2 class="text-3xl font-extrabold text-gray-800 mb-8 tracking-tight mt-2">記録する</h2>
+      <h2 class="text-3xl font-extrabold text-gray-800 mb-6 tracking-tight mt-2">取引を記録する</h2>
       
       <div class="card !p-5 md:!p-8">
-        <div class="flex bg-gray-100 p-1.5 rounded-xl mb-8 w-full max-w-lg mx-auto shadow-inner">
-          <button id="mode-expense" class="flex-1 py-3 text-sm font-bold rounded-lg transition" onclick="switchInputMode('expense')">支出</button>
-          <button id="mode-income" class="flex-1 py-3 text-sm font-bold rounded-lg transition" onclick="switchInputMode('income')">収入</button>
-          <button id="mode-transfer" class="flex-1 py-3 text-sm font-bold rounded-lg transition" onclick="switchInputMode('transfer')">振替 (移動)</button>
+        <div class="flex bg-gray-100 p-1.5 rounded-xl mb-6 w-full max-w-lg mx-auto shadow-inner">
+          <button id="mode-expense" class="flex-1 py-2.5 text-sm font-bold rounded-lg transition" onclick="switchInputMode('expense')">支出</button>
+          <button id="mode-income" class="flex-1 py-2.5 text-sm font-bold rounded-lg transition" onclick="switchInputMode('income')">収入</button>
+          <button id="mode-transfer" class="flex-1 py-2.5 text-sm font-bold rounded-lg transition" onclick="switchInputMode('transfer')">振替 (移動)</button>
         </div>
 
         <form id="simple-input-form" onsubmit="submitTransaction(event)">
           <input type="hidden" id="si-mode" value="expense">
           
-          <div class="space-y-6 max-w-2xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-5 max-w-2xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div><label>日付</label><input type="date" id="si-date" class="input-field shadow-sm" required></div>
-              <div><label>金額</label><input type="number" id="si-amount" class="input-field font-extrabold text-2xl text-blue-700 bg-blue-50 shadow-sm" placeholder="0" min="1" required></div>
+              <div><label>金額</label><input type="number" id="si-amount" class="input-field font-extrabold text-xl text-blue-700 bg-blue-50 shadow-sm" placeholder="0" min="1" required></div>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 p-5 rounded-xl border border-gray-200">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 bg-gray-50 p-5 rounded-xl border border-gray-200">
               <div id="si-account-box"><label id="si-account-label">支払元 (財布・カード)</label><select id="si-account" class="input-field shadow-sm bg-white" required></select></div>
-              <div id="si-category-box"><label id="si-category-label">カテゴリ (食費など)</label><select id="si-category" class="input-field shadow-sm bg-white" required></select></div>
+              <div id="si-category-box"><label id="si-category-label">カテゴリ (用途)</label><select id="si-category" class="input-field shadow-sm bg-white" required></select></div>
               <div id="si-transfer-to-box" class="hidden"><label>移動先 (入金先)</label><select id="si-transfer-to" class="input-field shadow-sm bg-white"></select></div>
             </div>
 
-            <div><label>メモ・摘要 (お店や内容)</label><input type="text" id="si-memo" class="input-field shadow-sm" placeholder="例: スーパー、Amazon、お小遣い"></div>
+            <div><label>メモ (お店や詳細)</label><input type="text" id="si-memo" class="input-field shadow-sm" placeholder="例: スーパー、Amazon"></div>
 
-            <div class="pt-6 flex justify-center">
-              <button type="submit" class="btn-primary w-full md:w-auto md:min-w-[300px] !text-xl !py-4 shadow-lg"><i class="fa-solid fa-check mr-2"></i>保存する</button>
+            <div class="pt-4 flex justify-center">
+              <button type="submit" class="btn-primary w-full md:w-auto md:min-w-[300px] !text-lg !py-3 shadow-lg"><i class="fa-solid fa-check mr-2"></i>保存する</button>
             </div>
           </div>
         </form>
@@ -189,113 +183,120 @@
     </section>
 
     <section id="journal" class="tab-content">
-      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4 mt-2">
+      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4 mt-2">
         <h2 class="text-3xl font-extrabold text-gray-800 tracking-tight">履歴一覧</h2>
         <div class="flex items-center gap-3">
-          <select id="filter-month" class="input-field !h-12 !w-auto text-base font-bold shadow-sm" onchange="renderHistory()"></select>
+          <select id="filter-month" class="input-field !h-10 !w-auto text-sm font-bold shadow-sm" onchange="renderHistory()"></select>
         </div>
       </div>
       
-      <div class="card !p-0 overflow-hidden shadow-md">
-        <div id="history-list" class="divide-y divide-gray-100 max-h-[65vh] overflow-y-auto hide-scroll pb-10">
+      <div class="card !p-0 overflow-hidden shadow-sm">
+        <div id="history-list" class="divide-y divide-gray-100 max-h-[70vh] overflow-y-auto hide-scroll pb-10">
           </div>
       </div>
     </section>
 
     <section id="report" class="tab-content">
-      <div class="flex justify-between items-center mb-8 mt-2">
+      <div class="flex justify-between items-center mb-6 mt-2">
         <h2 class="text-3xl font-extrabold text-gray-800 tracking-tight">分析・帳簿</h2>
-        <button onclick="exportPDF()" class="btn-secondary !text-red-600 !border-red-200 !bg-red-50 hover:!bg-red-100 !py-2 !px-4 !text-sm"><i class="fa-solid fa-file-pdf mr-2"></i>PDF出力</button>
+        <button onclick="exportPDF()" class="btn-secondary !text-red-600 !border-red-200 !bg-red-50 hover:!bg-red-100 !py-2 !px-3 !text-xs"><i class="fa-solid fa-file-pdf mr-1"></i>PDF出力</button>
       </div>
       
-      <div class="flex space-x-3 mb-8 overflow-x-auto hide-scroll pb-2">
-        <button onclick="switchReportTab('summary')" id="rtab-summary" class="btn-primary !px-5 !py-2.5 !rounded-xl !text-sm whitespace-nowrap shadow-sm">年間グラフ</button>
-        <button onclick="switchReportTab('pl')" id="rtab-pl" class="btn-secondary !px-5 !py-2.5 !rounded-xl !text-sm whitespace-nowrap !border-gray-200 shadow-sm">今月の収支</button>
-        <button onclick="switchReportTab('bs')" id="rtab-bs" class="btn-secondary !px-5 !py-2.5 !rounded-xl !text-sm whitespace-nowrap !border-gray-200 shadow-sm">資産と負債</button>
-        <button onclick="switchReportTab('ledger')" id="rtab-ledger" class="btn-secondary !px-5 !py-2.5 !rounded-xl !text-sm whitespace-nowrap !border-gray-200 shadow-sm">口座別履歴</button>
-        <button onclick="switchReportTab('budget')" id="rtab-budget" class="btn-secondary !px-5 !py-2.5 !rounded-xl !text-sm whitespace-nowrap !border-gray-200 shadow-sm">予算管理</button>
+      <div class="flex space-x-2 mb-6 overflow-x-auto hide-scroll pb-2">
+        <button onclick="switchReportTab('budget')" id="rtab-budget" class="btn-primary !px-4 !py-2 !rounded-lg !text-sm whitespace-nowrap shadow-sm">予算管理</button>
+        <button onclick="switchReportTab('summary')" id="rtab-summary" class="btn-secondary !px-4 !py-2 !rounded-lg !text-sm whitespace-nowrap !border-gray-200 shadow-sm">年間グラフ</button>
+        <button onclick="switchReportTab('pl')" id="rtab-pl" class="btn-secondary !px-4 !py-2 !rounded-lg !text-sm whitespace-nowrap !border-gray-200 shadow-sm">今月の収支</button>
+        <button onclick="switchReportTab('bs')" id="rtab-bs" class="btn-secondary !px-4 !py-2 !rounded-lg !text-sm whitespace-nowrap !border-gray-200 shadow-sm">資産と負債</button>
+        <button onclick="switchReportTab('ledger')" id="rtab-ledger" class="btn-secondary !px-4 !py-2 !rounded-lg !text-sm whitespace-nowrap !border-gray-200 shadow-sm">口座別履歴</button>
       </div>
 
       <div id="report-export-area" class="rounded-xl">
-        <div id="report-summary" class="report-view block">
-          <div class="card shadow-md">
+        
+        <div id="report-budget" class="report-view block">
+          <div class="card shadow-sm !p-5 md:!p-8">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 border-b pb-4 gap-4">
+              <h3 class="text-lg font-bold text-gray-700"><i class="fa-solid fa-bullseye text-blue-500 mr-2"></i><span id="budget-month-display">表示月</span>の予算消化状況</h3>
+              <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                <button onclick="copyPrevBudget()" class="btn-secondary !py-2 !px-3 !text-xs !rounded-lg"><i class="fa-solid fa-copy mr-1"></i>前月の設定をコピー</button>
+                <button onclick="carryOverBudget()" class="btn-primary !py-2 !px-3 !text-xs !rounded-lg whitespace-nowrap"><i class="fa-solid fa-hand-holding-dollar mr-1"></i>前月残額を当月に繰越</button>
+                <input type="month" id="budget-month" class="input-field !h-10 !w-auto text-sm font-bold shadow-sm" onchange="renderReports()">
+              </div>
+            </div>
+            
+            <p class="text-xs text-gray-500 mb-4">※ここで入力した予算額は「この月のみ」に適用されます。毎月の基本設定は「設定」タブから行ってください。</p>
+            <div class="overflow-x-auto border rounded-xl shadow-inner hide-scroll">
+              <table class="w-full text-sm text-left">
+                <thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b">
+                  <tr><th class="p-3 w-1/4">カテゴリ</th><th class="p-3 w-1/5 text-right">当月予算</th><th class="p-3 w-1/5 text-right">実績額</th><th class="p-3 w-auto">消化状況</th></tr>
+                </thead>
+                <tbody id="budget-tbody" class="divide-y divide-gray-100 bg-white"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="report-summary" class="report-view hidden">
+          <div class="card shadow-sm">
             <div class="flex justify-between items-center mb-6">
               <h3 class="font-bold text-gray-800 text-lg">月別 収支トレンド</h3>
-              <input type="number" id="rep-year" class="input-field !h-10 !w-24 text-base font-bold text-center shadow-sm" onchange="renderReports()">
+              <input type="number" id="rep-year" class="input-field !h-10 !w-24 text-sm font-bold text-center shadow-sm" onchange="renderReports()">
             </div>
             <div class="h-80 relative"><canvas id="annualTrendChart"></canvas></div>
           </div>
         </div>
 
         <div id="report-pl" class="report-view hidden">
-          <div class="card shadow-md max-w-3xl mx-auto !p-6 md:!p-8">
-            <div class="flex justify-between items-center mb-8 border-b pb-4">
-              <h3 class="font-black text-gray-800 text-xl md:text-2xl">今月の収支</h3>
-              <input type="month" id="pl-month" class="input-field !h-10 !w-auto text-sm py-0 font-bold" onchange="renderReports()">
+          <div class="card shadow-sm max-w-3xl mx-auto !p-6 md:!p-8">
+            <div class="flex justify-between items-center mb-6 border-b pb-4">
+              <h3 class="font-black text-gray-800 text-xl">指定月の収支</h3>
+              <input type="month" id="pl-month" class="input-field !h-10 !w-auto text-sm font-bold" onchange="renderReports()">
             </div>
-            <h4 class="font-bold text-lg text-blue-700 mb-4"><i class="fa-solid fa-arrow-down mr-2"></i>収入</h4>
-            <ul id="pl-income-list" class="space-y-3 mb-6 text-base px-2"></ul>
-            <div class="flex justify-between font-bold text-gray-800 text-lg mb-10 bg-blue-50 p-4 rounded-lg"><span>収入合計</span><span id="pl-total-income" class="text-blue-700">¥0</span></div>
+            <h4 class="font-bold text-base text-blue-700 mb-3"><i class="fa-solid fa-arrow-down mr-2"></i>収入</h4>
+            <ul id="pl-income-list" class="space-y-2 mb-4 text-sm px-2"></ul>
+            <div class="flex justify-between font-bold text-gray-800 text-base mb-8 bg-blue-50 p-3 rounded-lg"><span>収入合計</span><span id="pl-total-income" class="text-blue-700">¥0</span></div>
             
-            <h4 class="font-bold text-lg text-orange-700 mb-4"><i class="fa-solid fa-arrow-up mr-2"></i>支出</h4>
-            <ul id="pl-expense-list" class="space-y-3 mb-6 text-base px-2"></ul>
-            <div class="flex justify-between font-bold text-gray-800 text-lg mb-10 bg-orange-50 p-4 rounded-lg"><span>支出合計</span><span id="pl-total-expense" class="text-orange-700">¥0</span></div>
+            <h4 class="font-bold text-base text-orange-700 mb-3"><i class="fa-solid fa-arrow-up mr-2"></i>支出</h4>
+            <ul id="pl-expense-list" class="space-y-2 mb-4 text-sm px-2"></ul>
+            <div class="flex justify-between font-bold text-gray-800 text-base mb-8 bg-orange-50 p-3 rounded-lg"><span>支出合計</span><span id="pl-total-expense" class="text-orange-700">¥0</span></div>
             
-            <div class="flex justify-between font-black text-2xl pt-6 border-t-4 border-gray-800"><span>収支差額 (残金)</span><span id="pl-net-income">¥0</span></div>
+            <div class="flex justify-between font-black text-xl pt-4 border-t-2 border-gray-800"><span>残金 (利益)</span><span id="pl-net-income">¥0</span></div>
           </div>
         </div>
 
         <div id="report-bs" class="report-view hidden">
-          <div class="card shadow-md flex flex-col md:flex-row gap-8 md:gap-10 !p-6 md:!p-8">
+          <div class="card shadow-sm flex flex-col md:flex-row gap-8 !p-6 md:!p-8">
             <div class="flex-1">
-              <h3 class="text-xl font-bold mb-6 text-blue-700 border-b-2 border-blue-200 pb-2"><i class="fa-solid fa-wallet mr-2"></i>現在の資産</h3>
-              <ul id="bs-assets-list" class="space-y-4 mb-6 text-base px-1"></ul>
-              <div class="flex justify-between font-black text-lg pt-4 border-t-2 border-gray-200"><span>資産合計</span><span id="bs-total-assets" class="text-blue-700">¥0</span></div>
+              <h3 class="text-lg font-bold mb-4 text-blue-700 border-b-2 border-blue-200 pb-2"><i class="fa-solid fa-wallet mr-2"></i>現在の資産</h3>
+              <ul id="bs-assets-list" class="space-y-3 mb-4 text-sm"></ul>
+              <div class="flex justify-between font-black text-base pt-3 border-t border-gray-200"><span>資産合計</span><span id="bs-total-assets" class="text-blue-700">¥0</span></div>
             </div>
-            <div class="flex-1 flex flex-col gap-8">
+            <div class="flex-1 flex flex-col gap-6">
               <div>
-                <h3 class="text-xl font-bold mb-6 text-red-600 border-b-2 border-red-200 pb-2"><i class="fa-solid fa-credit-card mr-2"></i>現在の負債</h3>
-                <ul id="bs-liab-list" class="space-y-4 mb-6 text-base px-1"></ul>
-                <div class="flex justify-between font-black text-lg pt-4 border-t-2 border-gray-200"><span>負債合計</span><span id="bs-total-liab" class="text-red-600">¥0</span></div>
+                <h3 class="text-lg font-bold mb-4 text-red-600 border-b-2 border-red-200 pb-2"><i class="fa-solid fa-credit-card mr-2"></i>現在の負債</h3>
+                <ul id="bs-liab-list" class="space-y-3 mb-4 text-sm"></ul>
+                <div class="flex justify-between font-black text-base pt-3 border-t border-gray-200"><span>負債合計</span><span id="bs-total-liab" class="text-red-600">¥0</span></div>
               </div>
-              <div class="mt-auto bg-green-50 border border-green-100 p-6 rounded-xl">
-                <div class="flex justify-between font-black text-xl text-green-700"><span>純資産 (資産 - 負債)</span><span id="bs-total-equity">¥0</span></div>
+              <div class="mt-auto bg-green-50 border border-green-100 p-5 rounded-xl">
+                <div class="flex justify-between font-black text-lg text-green-700"><span>純資産 (資産-負債)</span><span id="bs-total-equity">¥0</span></div>
               </div>
             </div>
           </div>
         </div>
 
         <div id="report-ledger" class="report-view hidden">
-          <div class="card shadow-md !p-0 overflow-hidden">
-            <div class="p-6 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div class="card shadow-sm !p-0 overflow-hidden">
+            <div class="p-5 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div class="flex items-center gap-3 w-full md:w-auto">
-                <select id="ledger-acc-select" class="input-field !h-12 !w-auto text-base font-bold shadow-sm" onchange="renderReports()"></select>
+                <select id="ledger-acc-select" class="input-field !h-10 !w-auto text-sm font-bold shadow-sm" onchange="renderReports()"></select>
                 <span class="text-sm font-bold text-gray-600">の履歴</span>
               </div>
             </div>
             <div class="overflow-x-auto max-h-[60vh] hide-scroll pb-10">
               <table class="w-full text-sm text-left">
-                <thead class="bg-white sticky top-0 z-10 shadow-sm text-gray-500 text-xs uppercase border-b border-gray-200">
-                  <tr><th class="p-4">日付</th><th class="p-4">相手カテゴリ・メモ</th><th class="p-4 text-right">入金</th><th class="p-4 text-right">出金</th><th class="p-4 text-right">残高</th></tr>
+                <thead class="bg-white sticky top-0 z-10 shadow-sm text-gray-500 text-[10px] md:text-xs uppercase border-b border-gray-200">
+                  <tr><th class="p-3">日付</th><th class="p-3">相手・内容</th><th class="p-3 text-right">入金</th><th class="p-3 text-right">出金</th><th class="p-3 text-right">残高</th></tr>
                 </thead>
                 <tbody id="ledger-tbody" class="divide-y divide-gray-100"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <div id="report-budget" class="report-view hidden">
-          <div class="card shadow-md !p-6 md:!p-8">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 border-b pb-4 gap-4">
-              <h3 class="text-lg font-bold text-gray-700"><i class="fa-solid fa-bullseye text-blue-500 mr-2"></i>今月の予算消化状況</h3>
-              <input type="month" id="budget-month" class="input-field !h-12 !w-auto text-sm font-bold shadow-sm" onchange="renderReports()">
-            </div>
-            <div class="overflow-x-auto border rounded-xl shadow-inner hide-scroll">
-              <table class="w-full text-sm text-left whitespace-nowrap md:whitespace-normal">
-                <thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b">
-                  <tr><th class="p-4 w-1/4">カテゴリ</th><th class="p-4 w-1/6 text-right">予算設定</th><th class="p-4 w-1/6 text-right">実績額</th><th class="p-4 w-5/12">消化状況</th></tr>
-                </thead>
-                <tbody id="budget-tbody" class="divide-y divide-gray-100 bg-white"></tbody>
               </table>
             </div>
           </div>
@@ -305,78 +306,81 @@
     </section>
 
     <section id="settings" class="tab-content">
-      <h2 class="text-3xl font-extrabold text-gray-800 mb-8 tracking-tight mt-2">設定</h2>
+      <h2 class="text-3xl font-extrabold text-gray-800 mb-6 tracking-tight mt-2">設定</h2>
       
-      <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-5 md:p-8 rounded-2xl shadow-sm border border-blue-100 mb-8">
-        <h3 class="text-xl font-bold mb-4 text-blue-800 border-b border-blue-200 pb-2"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>クラウド同期 (端末間共有)</h3>
-        <p class="text-sm text-gray-600 mb-6 leading-relaxed">この端末のデータを一時的にクラウドに預け、別の端末(PCなど)で「同期ID」を入力して引き継ぐことができます。<br><span class="text-xs text-red-500 font-bold">※無料の一時保存領域を使用するため、長期間のバックアップには下のCSV機能をご利用ください。</span></p>
-        
-        <div class="flex flex-col md:flex-row gap-6">
-          <div class="flex-1 bg-white p-5 rounded-xl border border-blue-100 shadow-sm">
-            <h4 class="font-bold text-gray-700 mb-3 text-sm">① 今のデータを預けてIDを発行</h4>
-            <button onclick="syncUpload()" id="sync-up-btn" class="w-full bg-blue-600 text-white font-bold rounded-xl px-4 py-3 hover:bg-blue-700 shadow-md transition active:scale-95"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>アップロードする</button>
-            <div id="sync-result" class="hidden mt-4 text-center bg-blue-50 py-3 rounded-lg border border-blue-200">
-              <span class="text-xs text-gray-500 block mb-1">あなたの同期ID</span>
-              <span id="sync-id-display" class="text-2xl font-extrabold text-blue-700 tracking-wider select-all">---</span>
-            </div>
-          </div>
-          <div class="flex-1 bg-white p-5 rounded-xl border border-blue-100 shadow-sm">
-            <h4 class="font-bold text-gray-700 mb-3 text-sm">② 別の端末のデータを受け取る</h4>
-            <div class="flex gap-2">
-              <input type="text" id="sync-id-input" placeholder="同期IDを入力" class="flex-1 h-12 box-border border rounded-xl px-3 text-center text-lg font-bold tracking-wider focus:ring-2 focus:ring-blue-500 bg-gray-50">
-              <button onclick="syncDownload()" id="sync-down-btn" class="bg-indigo-600 text-white font-bold rounded-xl px-5 h-12 hover:bg-indigo-700 shadow-md transition active:scale-95"><i class="fa-solid fa-cloud-arrow-down"></i></button>
-            </div>
-          </div>
+      <div class="card shadow-sm mb-6">
+        <h3 class="text-lg font-bold mb-3 text-gray-800 border-b pb-2"><i class="fa-solid fa-bullseye text-blue-500 mr-2"></i>基本予算の設定 (毎月のデフォルト)</h3>
+        <p class="text-xs text-gray-500 mb-4">毎月の基準となる予算を設定します。特定の月だけ変更したい場合は「分析・帳簿」の「予算管理」タブをご利用ください。</p>
+        <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+          <ul id="set-base-budget-list" class="space-y-2 max-h-48 overflow-y-auto pr-2 hide-scroll"></ul>
         </div>
       </div>
 
-      <div class="card shadow-md">
-        <h3 class="text-lg font-bold mb-4 text-gray-800 border-b pb-3"><i class="fa-solid fa-clock-rotate-left text-blue-500 mr-2"></i>定期入力ルール (家賃・給与など)</h3>
-        <form onsubmit="addRecurring(event)" class="bg-gray-50 p-5 rounded-xl border border-gray-200 mb-6">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-            <div class="flex items-center bg-white border border-gray-300 rounded-xl h-12 px-3 focus-within:ring-2 focus-within:ring-blue-500">
-              <span class="text-gray-500 font-bold text-sm mr-2 whitespace-nowrap">毎月</span>
-              <input type="number" id="r-day" min="1" max="31" class="w-full outline-none font-bold" placeholder="日 (例: 25)" required>
+      <div class="card shadow-sm mb-6">
+        <h3 class="text-lg font-bold mb-3 text-gray-800 border-b pb-2"><i class="fa-solid fa-clock-rotate-left text-blue-500 mr-2"></i>定期入力ルール (家賃・給与など)</h3>
+        <form onsubmit="addRecurring(event)" class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+            <div class="flex items-center bg-white border border-gray-300 rounded-lg h-10 px-3 focus-within:ring-2 focus-within:ring-blue-500">
+              <span class="text-gray-500 font-bold text-xs mr-2 whitespace-nowrap">毎月</span>
+              <input type="number" id="r-day" min="1" max="31" class="w-full outline-none font-bold text-sm" placeholder="日 (例: 25)" required>
             </div>
-            <input type="number" id="r-amount" min="1" class="input-field font-bold text-lg text-blue-700 bg-blue-50" placeholder="金額" required>
+            <input type="number" id="r-amount" min="1" class="input-field !h-10 font-bold text-sm text-blue-700 bg-blue-50" placeholder="金額" required>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-            <div><label>出金元 / 入金先 (口座・財布)</label><select id="r-account" class="input-field" required></select></div>
-            <div><label>カテゴリ (用途・収入源)</label><select id="r-category" class="input-field" required></select></div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+            <div><label class="!mb-1">出金元 / 入金先</label><select id="r-account" class="input-field !h-10 text-sm" required></select></div>
+            <div><label class="!mb-1">カテゴリ</label><select id="r-category" class="input-field !h-10 text-sm" required></select></div>
           </div>
-          <div><label>メモ (摘要)</label><input type="text" id="r-memo" class="input-field" placeholder="例: 家賃引き落とし"></div>
-          <div class="mt-4 text-right"><button type="submit" class="btn-primary !px-8"><i class="fa-solid fa-plus mr-2"></i>ルール追加</button></div>
+          <div><label class="!mb-1">メモ (摘要)</label><input type="text" id="r-memo" class="input-field !h-10 text-sm" placeholder="例: 家賃引き落とし"></div>
+          <div class="mt-3 text-right"><button type="submit" class="btn-primary !px-6 !py-2 !text-sm"><i class="fa-solid fa-plus mr-1"></i>追加</button></div>
         </form>
-        <ul id="set-rec-list" class="space-y-3 max-h-60 overflow-y-auto pr-2 hide-scroll"></ul>
+        <ul id="set-rec-list" class="space-y-2 max-h-48 overflow-y-auto pr-2 hide-scroll"></ul>
       </div>
 
-      <div class="card shadow-md">
-        <h3 class="text-lg font-bold mb-4 text-gray-800 border-b pb-3"><i class="fa-solid fa-tags text-blue-500 mr-2"></i>財布・口座・カテゴリのカスタマイズ</h3>
-        <form onsubmit="addAccount(event)" class="flex flex-col sm:flex-row gap-3 mb-6 bg-gray-50 p-4 rounded-xl border border-gray-200">
-          <input type="text" id="new-acc-name" class="input-field flex-1" placeholder="名称 (例: PayPay, 交通費)" required>
-          <div class="flex gap-3">
-            <select id="new-acc-type" class="input-field w-full sm:w-40 font-bold text-gray-600">
+      <div class="card shadow-sm mb-6">
+        <h3 class="text-lg font-bold mb-3 text-gray-800 border-b pb-2"><i class="fa-solid fa-tags text-blue-500 mr-2"></i>財布・口座・カテゴリの管理</h3>
+        <form onsubmit="addAccount(event)" class="flex flex-col sm:flex-row gap-2 mb-4 bg-gray-50 p-3 rounded-xl border border-gray-200">
+          <input type="text" id="new-acc-name" class="input-field !h-10 text-sm flex-1" placeholder="名称 (例: PayPay, 交通費)" required>
+          <div class="flex gap-2">
+            <select id="new-acc-type" class="input-field !h-10 text-sm w-full sm:w-40 font-bold text-gray-600">
               <option value="asset">資産 (財布/口座)</option><option value="liability">負債 (カード等)</option><option value="expense">支出カテゴリ</option><option value="income">収入カテゴリ</option>
             </select>
-            <button type="submit" class="btn-primary whitespace-nowrap !px-6"><i class="fa-solid fa-plus"></i></button>
+            <button type="submit" class="btn-primary !h-10 !px-4 !py-0"><i class="fa-solid fa-plus"></i></button>
           </div>
         </form>
-        <ul id="set-acc-list" class="space-y-2 max-h-64 overflow-y-auto text-sm pr-2 hide-scroll"></ul>
+        <ul id="set-acc-list" class="space-y-2 max-h-48 overflow-y-auto text-sm pr-2 hide-scroll"></ul>
       </div>
 
-      <div class="card border-l-8 border-l-green-500 shadow-md !bg-green-50/30">
-        <h3 class="text-xl font-bold mb-3 text-gray-800"><i class="fa-solid fa-file-export text-green-500 mr-2"></i>CSVデータのバックアップ</h3>
-        <div class="flex flex-col sm:flex-row gap-4 mt-6">
-          <button onclick="exportCSV()" class="btn-primary !bg-green-600 hover:!bg-green-700 flex-1 !py-4 !text-lg"><i class="fa-solid fa-download mr-2"></i>CSVを保存</button>
-          <div class="relative flex-1">
-            <input type="file" accept=".csv" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="importCSV(event)">
-            <button class="btn-secondary w-full !py-4 !text-lg pointer-events-none shadow-sm"><i class="fa-solid fa-upload mr-2 text-gray-400"></i>CSVから復元</button>
+      <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-5 rounded-2xl shadow-sm border border-blue-100 mb-6">
+        <h3 class="text-lg font-bold mb-3 text-blue-800 border-b border-blue-200 pb-2"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>クラウド一時同期</h3>
+        <div class="flex flex-col md:flex-row gap-4">
+          <div class="flex-1 bg-white p-4 rounded-xl shadow-sm">
+            <button onclick="syncUpload()" id="sync-up-btn" class="w-full bg-blue-600 text-white font-bold rounded-lg px-3 py-2 hover:bg-blue-700 transition text-sm"><i class="fa-solid fa-cloud-arrow-up mr-1"></i>一時IDを発行</button>
+            <div id="sync-result" class="hidden mt-3 text-center bg-blue-50 py-2 rounded border border-blue-200">
+              <span id="sync-id-display" class="text-xl font-extrabold text-blue-700 select-all">---</span>
+            </div>
+          </div>
+          <div class="flex-1 bg-white p-4 rounded-xl shadow-sm">
+            <div class="flex gap-2">
+              <input type="text" id="sync-id-input" placeholder="IDを入力" class="flex-1 input-field !h-10 text-center font-bold">
+              <button onclick="syncDownload()" id="sync-down-btn" class="bg-indigo-600 text-white font-bold rounded-lg px-4 h-10 hover:bg-indigo-700 transition"><i class="fa-solid fa-download"></i></button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="text-right mt-12 mb-8">
-        <button onclick="resetData()" class="text-sm text-red-500 font-bold hover:underline py-2 px-4 rounded hover:bg-red-50 transition"><i class="fa-solid fa-triangle-exclamation mr-2"></i>全データを初期化する</button>
+      <div class="card border-l-4 border-l-green-500 shadow-sm !bg-green-50/30">
+        <h3 class="text-lg font-bold mb-2 text-gray-800"><i class="fa-solid fa-file-export text-green-500 mr-2"></i>CSVバックアップ</h3>
+        <div class="flex flex-col sm:flex-row gap-3 mt-4">
+          <button onclick="exportCSV()" class="btn-primary !bg-green-600 hover:!bg-green-700 flex-1 !py-3 !text-sm"><i class="fa-solid fa-download mr-1"></i>CSV保存</button>
+          <div class="relative flex-1">
+            <input type="file" accept=".csv" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="importCSV(event)">
+            <button class="btn-secondary w-full !py-3 !text-sm pointer-events-none"><i class="fa-solid fa-upload mr-1"></i>CSV復元</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-right mt-8 mb-6">
+        <button onclick="resetData()" class="text-xs text-red-500 font-bold hover:underline py-1 px-2 rounded"><i class="fa-solid fa-triangle-exclamation mr-1"></i>全データを初期化</button>
       </div>
     </section>
 
@@ -390,16 +394,16 @@
       </div>
       <div class="p-6 overflow-y-auto hide-scroll modal-pb-safe bg-white">
         <input type="hidden" id="edit-id">
-        <div class="space-y-5">
+        <div class="space-y-4">
           <div><label>日付</label><input type="date" id="edit-date" class="input-field bg-gray-50" required></div>
-          <div class="grid grid-cols-2 gap-4">
-            <div><label>入金先 / 費用カテゴリ</label><select id="edit-debit" class="input-field bg-gray-50" required></select></div>
-            <div><label>支払元 / 収入カテゴリ</label><select id="edit-credit" class="input-field bg-gray-50" required></select></div>
+          <div class="grid grid-cols-2 gap-3">
+            <div><label>入金先 / 費用</label><select id="edit-debit" class="input-field bg-gray-50 text-sm" required></select></div>
+            <div><label>支払元 / 収入</label><select id="edit-credit" class="input-field bg-gray-50 text-sm" required></select></div>
           </div>
-          <div><label>金額</label><input type="number" id="edit-amount" class="input-field font-extrabold text-2xl text-blue-700 bg-blue-50 border-blue-200" min="1" required></div>
+          <div><label>金額</label><input type="number" id="edit-amount" class="input-field font-extrabold text-xl text-blue-700 bg-blue-50 border-blue-200" min="1" required></div>
           <div><label>メモ・摘要</label><input type="text" id="edit-memo" class="input-field" placeholder="内容"></div>
-          <div class="pt-6">
-            <button onclick="saveEdit()" class="btn-primary w-full !text-xl !py-4 shadow-lg"><i class="fa-solid fa-check mr-2"></i>変更を保存する</button>
+          <div class="pt-4">
+            <button onclick="saveEdit()" class="btn-primary w-full !text-lg !py-3 shadow-md"><i class="fa-solid fa-check mr-2"></i>変更を保存する</button>
           </div>
         </div>
       </div>
@@ -407,29 +411,32 @@
   </div>
 
   <script>
-    // --- 1. State & Storage ---
-    const STORAGE_KEY = 'poket_kakeibo_v1';
+    const STORAGE_KEY = 'poket_kakeibo_v3';
     
-    // 家計簿に特化した初期アカウント
     const defaultAccounts = [
-      { id: 'a1', name: '財布 (現金)', type: 'asset' }, { id: 'a2', name: 'メイン銀行口座', type: 'asset' },
+      { id: 'a1', name: '財布 (現金)', type: 'asset' }, { id: 'a2', name: 'メイン口座', type: 'asset' },
       { id: 'l1', name: 'クレジットカード', type: 'liability' },
       { id: 'e1', name: '食費', type: 'expense' }, { id: 'e2', name: '日用品', type: 'expense' }, { id: 'e3', name: '交通費', type: 'expense' }, 
-      { id: 'e4', name: '住居費 (家賃)', type: 'expense' }, { id: 'e5', name: '水道光熱費', type: 'expense' }, { id: 'e6', name: '通信費', type: 'expense' },
-      { id: 'e7', name: '趣味・交際費', type: 'expense' }, { id: 'e8', name: 'その他支出', type: 'expense' },
-      { id: 'i1', name: '給与収入', type: 'income' }, { id: 'i2', name: '臨時収入', type: 'income' }
+      { id: 'e4', name: '住居費', type: 'expense' }, { id: 'e5', name: '水道光熱費', type: 'expense' }, { id: 'e6', name: '通信費', type: 'expense' },
+      { id: 'e7', name: '交際費', type: 'expense' }, { id: 'e8', name: 'その他', type: 'expense' },
+      { id: 'i1', name: '給与', type: 'income' }, { id: 'i2', name: '臨時収入', type: 'income' }
     ];
 
-    let state = { accounts: [], journals: [], recurring: [], budgets: {} };
+    let state = { accounts: [], journals: [], recurring: [], baseBudgets: {}, monthlyBudgets: {} };
 
     function loadData() {
       const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) { state = JSON.parse(saved); } else { state.accounts = defaultAccounts; saveData(); }
-      if (!state.budgets) state.budgets = {}; // 下位互換
+      if (saved) { 
+        state = JSON.parse(saved); 
+        if(state.budgets) { state.baseBudgets = state.budgets; delete state.budgets; }
+        if(!state.baseBudgets) state.baseBudgets = {};
+        if(!state.monthlyBudgets) state.monthlyBudgets = {};
+      } else { 
+        state.accounts = defaultAccounts; state.baseBudgets = {}; state.monthlyBudgets = {}; saveData(); 
+      }
     }
     function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
 
-    // --- 2. Utilities ---
     const formatJPY = (num) => new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(num || 0);
     const getAcc = (id) => state.accounts.find(a => String(a.id) === String(id)) || { name: '不明', type: 'unknown' };
     const generateId = (prefix) => prefix + '_' + Date.now() + Math.random().toString(36).substr(2, 9);
@@ -437,7 +444,7 @@
 
     function buildAccOptions(allowedTypes = null) {
       let html = '<option value="">選択してください</option>';
-      const groups = { asset: '資産 (財布・口座)', liability: '負債 (カード)', income: '収入カテゴリ', expense: '支出カテゴリ' };
+      const groups = { asset: '資産 (口座・財布)', liability: '負債 (カード等)', income: '収入カテゴリ', expense: '支出カテゴリ' };
       Object.keys(groups).forEach(type => {
         if (allowedTypes && !allowedTypes.includes(type)) return;
         const accs = state.accounts.filter(a => a.type === type);
@@ -460,59 +467,37 @@
       return bal;
     }
 
-    // --- 3. Core Navigation ---
-    // HTMLのonclickから直接呼べるようにグローバル関数にする
     window.switchTab = function(tabId) {
-      try {
-        // 1. 全タブを非表示
-        document.querySelectorAll('.tab-content').forEach(el => {
-          el.style.display = 'none';
-          el.classList.remove('active');
-        });
-        
-        // 2. ターゲットタブを表示
-        const target = document.getElementById(tabId);
-        if(target) {
-          target.style.display = 'block';
-          setTimeout(() => target.classList.add('active'), 10);
+      document.querySelectorAll('.tab-content').forEach(el => { el.style.display = 'none'; el.classList.remove('active'); });
+      const target = document.getElementById(tabId);
+      if(target) { target.style.display = 'block'; setTimeout(() => target.classList.add('active'), 10); }
+      
+      document.querySelectorAll('.nav-btn, .nav-btn-mobile').forEach(btn => {
+        const isActive = btn.getAttribute('data-target') === tabId;
+        if (btn.classList.contains('nav-btn')) {
+          btn.classList.toggle('text-blue-700', isActive); btn.classList.toggle('bg-blue-50', isActive); btn.classList.toggle('text-gray-500', !isActive);
+        } else {
+          btn.classList.toggle('text-blue-600', isActive); btn.classList.toggle('text-gray-400', !isActive);
+          const iconWrap = btn.querySelector('div'); 
+          if(iconWrap && !iconWrap.classList.contains('bg-blue-600')) { btn.style.transform = isActive ? 'scale(1.15)' : 'scale(1)'; }
         }
-        
-        // 3. ナビボタンのスタイル更新
-        document.querySelectorAll('.nav-btn, .nav-btn-mobile').forEach(btn => {
-          const isActive = btn.getAttribute('data-target') === tabId;
-          if (btn.classList.contains('nav-btn')) {
-            btn.classList.toggle('text-blue-700', isActive); btn.classList.toggle('bg-blue-50', isActive);
-            btn.classList.toggle('text-gray-600', !isActive);
-          } else {
-            btn.classList.toggle('text-blue-600', isActive); btn.classList.toggle('text-gray-400', !isActive);
-            const iconWrap = btn.querySelector('div'); 
-            if(iconWrap && !iconWrap.classList.contains('bg-blue-600')) {
-              btn.style.transform = isActive ? 'scale(1.15)' : 'scale(1)';
-            }
-          }
-        });
-        
-        window.scrollTo(0, 0);
-        
-        // 4. ビューごとのデータ更新
-        if (tabId === 'dashboard') renderDashboard();
-        if (tabId === 'input') switchInputMode(currentInputMode); // セレクトボックス最新化
-        if (tabId === 'journal') renderHistory();
-        if (tabId === 'report') renderReports();
-        if (tabId === 'settings') renderSettings();
-      } catch (e) {
-        console.error("Tab Switch Error:", e);
-      }
+      });
+      window.scrollTo(0, 0);
+      
+      if (tabId === 'dashboard') renderDashboard();
+      if (tabId === 'input') switchInputMode(currentInputMode);
+      if (tabId === 'journal') renderHistory();
+      if (tabId === 'report') renderReports();
+      if (tabId === 'settings') renderSettings();
     };
 
-    // --- 4. Input Module ---
     let currentInputMode = 'expense';
     window.switchInputMode = function(mode) {
       currentInputMode = mode;
       document.getElementById('si-mode').value = mode;
       
       const btnExp = document.getElementById('mode-expense'); const btnInc = document.getElementById('mode-income'); const btnTrf = document.getElementById('mode-transfer');
-      [btnExp, btnInc, btnTrf].forEach(b => { b.className = 'flex-1 py-3 text-sm font-bold rounded-lg text-gray-500 hover:text-gray-800 transition'; });
+      [btnExp, btnInc, btnTrf].forEach(b => { b.className = 'flex-1 py-2.5 text-sm font-bold rounded-lg text-gray-500 hover:text-gray-800 transition'; });
 
       const accSelect = document.getElementById('si-account'); const catSelect = document.getElementById('si-category'); const toSelect = document.getElementById('si-transfer-to');
       const toBox = document.getElementById('si-transfer-to-box'); const catBox = document.getElementById('si-category-box');
@@ -520,17 +505,17 @@
       if(!document.getElementById('si-date').value) document.getElementById('si-date').value = new Date().toISOString().slice(0, 10);
 
       if (mode === 'expense') {
-        btnExp.className = 'flex-1 py-3 text-sm font-bold rounded-lg bg-white shadow text-orange-600 transition';
+        btnExp.className = 'flex-1 py-2.5 text-sm font-bold rounded-lg bg-white shadow text-orange-600 transition';
         document.getElementById('si-account-label').innerText = '支払元 (財布・カード)'; document.getElementById('si-category-label').innerText = 'カテゴリ (用途)';
         accSelect.innerHTML = buildAccOptions(['asset', 'liability']); catSelect.innerHTML = buildAccOptions(['expense', 'asset']);
         toBox.classList.add('hidden'); catBox.classList.remove('hidden');
       } else if (mode === 'income') {
-        btnInc.className = 'flex-1 py-3 text-sm font-bold rounded-lg bg-white shadow text-blue-600 transition';
+        btnInc.className = 'flex-1 py-2.5 text-sm font-bold rounded-lg bg-white shadow text-blue-600 transition';
         document.getElementById('si-account-label').innerText = '入金先 (財布・口座)'; document.getElementById('si-category-label').innerText = 'カテゴリ (収入源)';
         accSelect.innerHTML = buildAccOptions(['asset']); catSelect.innerHTML = buildAccOptions(['income']);
         toBox.classList.add('hidden'); catBox.classList.remove('hidden');
       } else if (mode === 'transfer') {
-        btnTrf.className = 'flex-1 py-3 text-sm font-bold rounded-lg bg-white shadow text-gray-800 transition';
+        btnTrf.className = 'flex-1 py-2.5 text-sm font-bold rounded-lg bg-white shadow text-gray-800 transition';
         document.getElementById('si-account-label').innerText = '出金元 (移動元)';
         accSelect.innerHTML = buildAccOptions(['asset']); toSelect.innerHTML = buildAccOptions(['asset', 'liability']);
         toBox.classList.remove('hidden'); catBox.classList.add('hidden');
@@ -539,11 +524,8 @@
 
     window.submitTransaction = function(e) {
       e.preventDefault();
-      const mode = document.getElementById('si-mode').value;
-      const date = document.getElementById('si-date').value;
-      const amount = parseInt(document.getElementById('si-amount').value, 10);
-      const accId = document.getElementById('si-account').value;
-      const memo = document.getElementById('si-memo').value.trim();
+      const mode = document.getElementById('si-mode').value; const date = document.getElementById('si-date').value; const amount = parseInt(document.getElementById('si-amount').value, 10);
+      const accId = document.getElementById('si-account').value; const memo = document.getElementById('si-memo').value.trim();
       let debit, credit;
 
       if (mode === 'expense') { debit = document.getElementById('si-category').value; credit = accId; } 
@@ -554,74 +536,64 @@
       if(debit === credit) return alert("出金元と入金先が同じです。");
 
       state.journals.push({ id: generateId('j'), date, debit, credit, amount, desc: memo, created: new Date().toISOString() });
-      saveData();
-      
-      document.getElementById('si-amount').value = ''; document.getElementById('si-memo').value = '';
-      alert(`登録しました！\n${formatJPY(amount)}`);
-      switchTab('journal');
+      saveData(); document.getElementById('si-amount').value = ''; document.getElementById('si-memo').value = '';
+      alert(`登録しました！\n${formatJPY(amount)}`); switchTab('journal');
     };
 
-    // --- 5. Dashboard ---
     window.renderDashboard = function() {
       const monthInput = document.getElementById('dash-month');
       if(!monthInput.value) monthInput.value = new Date().toISOString().slice(0, 7);
       const targetMonth = monthInput.value;
 
-      let totalAssets = 0, totalLiab = 0; let monInc = 0, monExp = 0, monVar = 0, monFix = 0; let expData = {};
+      let totalAssets = 0, totalLiab = 0; let monInc = 0, monExp = 0, expData = {};
       const balances = calcBalances();
       state.accounts.forEach(a => { if(a.type === 'asset') totalAssets += balances[a.id]; if(a.type === 'liability') totalLiab += balances[a.id]; });
 
       state.journals.forEach(j => {
         if(j.date.startsWith(targetMonth)) {
           const dAcc = getAcc(j.debit); const cAcc = getAcc(j.credit);
-          if (dAcc.type === 'expense') { 
-            monExp += j.amount; 
-            const isFix = ['住居費 (家賃)','水道光熱費','通信費','保険料'].includes(dAcc.name); 
-            if(isFix) monFix += j.amount; else monVar += j.amount;
-            expData[dAcc.name] = (expData[dAcc.name] || 0) + j.amount;
-          }
+          if (dAcc.type === 'expense') { monExp += j.amount; expData[dAcc.name] = (expData[dAcc.name] || 0) + j.amount; }
           if (cAcc.type === 'income') monInc += j.amount;
         }
       });
 
-      document.getElementById('dash-assets').innerText = formatJPY(totalAssets); document.getElementById('dash-liabilities').innerText = formatJPY(totalLiab); document.getElementById('dash-net-assets').innerText = formatJPY(totalAssets - totalLiab);
-      document.getElementById('dash-income').innerText = formatJPY(monInc); document.getElementById('dash-expense').innerText = formatJPY(monExp); document.getElementById('dash-var-exp').innerText = formatJPY(monVar); document.getElementById('dash-fix-exp').innerText = formatJPY(monFix);
+      document.getElementById('dash-assets').innerText = formatJPY(totalAssets); document.getElementById('dash-liabilities').innerText = formatJPY(totalLiab); 
+      document.getElementById('dash-income').innerText = formatJPY(monInc); document.getElementById('dash-expense').innerText = formatJPY(monExp);
 
       const ctx = document.getElementById('dashExpenseChart').getContext('2d');
       if(window.dashChart) window.dashChart.destroy();
       const labels = Object.keys(expData); const data = Object.values(expData);
       if(labels.length > 0) {
-        window.dashChart = new Chart(ctx, { type: 'doughnut', data: { labels, datasets: [{ data, backgroundColor: ['#F97316','#3B82F6','#10B981','#8B5CF6','#EF4444','#F59E0B','#6366F1'], borderWidth: 3, borderColor: '#fff' }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'right', labels:{boxWidth:12, font:{size:12}} } } } });
+        window.dashChart = new Chart(ctx, { type: 'doughnut', data: { labels, datasets: [{ data, backgroundColor: ['#F97316','#3B82F6','#10B981','#8B5CF6','#EF4444','#F59E0B','#6366F1'], borderWidth: 2, borderColor: '#fff' }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'right', labels:{boxWidth:12, font:{size:11}} } } } });
       }
 
       const recentList = document.getElementById('dash-recent-list'); recentList.innerHTML = '';
       const recentJournals = [...state.journals].sort((a,b) => new Date(a.date) - new Date(b.date)).reverse().slice(0, 5);
       if (recentJournals.length === 0) {
-        recentList.innerHTML = '<p class="text-sm text-gray-400 py-8 text-center bg-gray-50 rounded-xl">データがありません</p>';
+        recentList.innerHTML = '<p class="text-sm text-gray-400 py-6 text-center bg-gray-50 rounded-xl border border-gray-100">データがありません</p>';
       } else {
         recentJournals.forEach(j => {
           const dAcc = getAcc(j.debit); const cAcc = getAcc(j.credit);
-          let icon = 'fa-money-bill-transfer text-gray-400'; let amountHtml = `<span class="font-black text-gray-800 text-lg">${formatJPY(j.amount)}</span>`;
+          let icon = 'fa-money-bill-transfer text-gray-400'; let amountHtml = `<span class="font-black text-gray-800 text-base md:text-lg">${formatJPY(j.amount)}</span>`;
           let catName = '振替'; let catColor = 'bg-gray-100 text-gray-800';
-          if (dAcc.type === 'expense') { icon = 'fa-basket-shopping text-orange-500'; catName = dAcc.name; catColor = 'bg-orange-100 text-orange-800'; amountHtml = `<span class="font-black text-orange-600 text-lg">-${formatJPY(j.amount)}</span>`; } 
-          else if (cAcc.type === 'income') { icon = 'fa-sack-dollar text-blue-500'; catName = cAcc.name; catColor = 'bg-blue-100 text-blue-800'; amountHtml = `<span class="font-black text-blue-600 text-lg">+${formatJPY(j.amount)}</span>`; }
+          if (dAcc.type === 'expense') { icon = 'fa-basket-shopping text-orange-500'; catName = dAcc.name; catColor = 'bg-orange-100 text-orange-800'; amountHtml = `<span class="font-black text-orange-600 text-base md:text-lg">-${formatJPY(j.amount)}</span>`; } 
+          else if (cAcc.type === 'income') { icon = 'fa-sack-dollar text-blue-500'; catName = cAcc.name; catColor = 'bg-blue-100 text-blue-800'; amountHtml = `<span class="font-black text-blue-600 text-base md:text-lg">+${formatJPY(j.amount)}</span>`; }
           
           recentList.innerHTML += `
-            <div class="record-row !p-4 !rounded-xl border !border-gray-100 mb-3 cursor-pointer hover:shadow-md group" onclick="openEditModal('${j.id}')">
-              <div class="flex items-center gap-4 overflow-hidden">
-                <div class="w-10 h-10 rounded-full bg-gray-50 group-hover:bg-white flex items-center justify-center shrink-0 border border-gray-100 text-lg"><i class="fa-solid ${icon}"></i></div>
+            <div class="record-row !p-3 md:!p-4 !rounded-xl border !border-gray-100 mb-2 cursor-pointer hover:shadow-md group" onclick="openEditModal('${j.id}')">
+              <div class="flex items-center gap-3 overflow-hidden">
+                <div class="w-10 h-10 rounded-full bg-gray-50 group-hover:bg-white flex items-center justify-center shrink-0 border border-gray-100 text-sm md:text-base"><i class="fa-solid ${icon}"></i></div>
                 <div class="truncate">
                   <p class="text-xs text-gray-400 mb-1 font-bold">${formatDateShort(j.date)} <span class="${catColor} text-[10px] px-1.5 py-0.5 rounded ml-2">${catName}</span></p>
                   <p class="text-sm font-bold text-gray-800 truncate">${j.desc || '(メモなし)'}</p>
                 </div>
               </div>
-              <div class="mt-2 sm:mt-0 text-right pl-14 sm:pl-0">${amountHtml}</div>
+              <div class="mt-2 sm:mt-0 text-right pl-12 sm:pl-0">${amountHtml}</div>
             </div>`;
         });
       }
     };
 
-    // --- 6. History (履歴タブ) ---
     window.renderHistory = function() {
       const filterSelect = document.getElementById('filter-month');
       const months = [...new Set(state.journals.map(j => j.date.slice(0, 7)))].sort().reverse();
@@ -634,7 +606,7 @@
 
       const list = document.getElementById('history-list'); list.innerHTML = '';
       const filtered = state.journals.filter(j => j.date.startsWith(targetMonth)).sort((a,b) => new Date(a.date) - new Date(b.date)).reverse();
-      if (filtered.length === 0) { list.innerHTML = '<div class="py-16 text-center text-gray-400"><i class="fa-solid fa-receipt text-5xl mb-4 text-gray-200"></i><p class="font-bold">取引がありません</p></div>'; return; }
+      if (filtered.length === 0) { list.innerHTML = '<div class="py-12 text-center text-gray-400"><i class="fa-solid fa-receipt text-4xl mb-4 text-gray-200"></i><p class="font-bold text-sm">取引がありません</p></div>'; return; }
 
       filtered.forEach(j => {
         const dAcc = getAcc(j.debit); const cAcc = getAcc(j.credit);
@@ -643,22 +615,22 @@
         else if (cAcc.type === 'income') { labelClass = "bg-blue-100 text-blue-800"; labelText = cAcc.name; amountClass = "text-blue-600"; }
 
         list.innerHTML += `
-          <div class="record-row border-b group !p-5">
-            <div class="flex-1 min-w-0 pr-4">
-              <div class="flex items-center gap-3 mb-2">
-                <span class="text-sm font-bold text-gray-500 w-12">${formatDateShort(j.date)}</span>
-                <span class="text-[10px] font-bold px-2 py-1 rounded ${labelClass}">${labelText}</span>
+          <div class="record-row border-b group !p-4">
+            <div class="flex-1 min-w-0 pr-2">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="text-xs font-bold text-gray-500 w-10">${formatDateShort(j.date)}</span>
+                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${labelClass}">${labelText}</span>
                 <span class="text-sm font-bold text-gray-800 truncate">${displayTitle}</span>
               </div>
-              <div class="flex items-center gap-2 text-[11px] font-bold text-gray-400 ml-16">
+              <div class="flex items-center gap-2 text-[10px] font-bold text-gray-400 ml-12">
                 <span>出: ${cAcc.name}</span><i class="fa-solid fa-caret-right"></i><span>入: ${dAcc.name}</span>
               </div>
             </div>
-            <div class="flex items-center justify-between mt-4 sm:mt-0 ml-16 sm:ml-0 gap-6 border-t sm:border-0 pt-4 sm:pt-0 border-gray-100">
-              <span class="text-xl font-black ${amountClass}">${formatJPY(j.amount)}</span>
+            <div class="flex items-center justify-between mt-3 sm:mt-0 ml-12 sm:ml-0 gap-4 border-t sm:border-0 pt-3 sm:pt-0 border-gray-100">
+              <span class="text-lg font-black ${amountClass}">${formatJPY(j.amount)}</span>
               <div class="flex gap-2">
-                <button onclick="openEditModal('${j.id}')" class="btn-icon bg-blue-50 text-blue-600 hover:bg-blue-100 shadow-sm"><i class="fa-solid fa-pen"></i></button>
-                <button onclick="deleteJournal('${j.id}')" class="btn-icon bg-red-50 text-red-500 hover:bg-red-100 shadow-sm"><i class="fa-solid fa-trash"></i></button>
+                <button onclick="openEditModal('${j.id}')" class="btn-icon bg-blue-50 text-blue-600 hover:bg-blue-100 shadow-sm"><i class="fa-solid fa-pen text-sm"></i></button>
+                <button onclick="deleteJournal('${j.id}')" class="btn-icon bg-red-50 text-red-500 hover:bg-red-100 shadow-sm"><i class="fa-solid fa-trash text-sm"></i></button>
               </div>
             </div>
           </div>
@@ -666,7 +638,6 @@
       });
     };
 
-    // --- 7. Edit & Delete ---
     window.openEditModal = function(id) {
       const j = state.journals.find(x => String(x.id) === String(id)); if(!j) return;
       document.getElementById('edit-id').value = j.id; document.getElementById('edit-date').value = j.date;
@@ -678,18 +649,17 @@
     window.closeEditModal = function() { document.getElementById('edit-modal').classList.add('hidden'); };
     window.saveEdit = function() {
       const id = document.getElementById('edit-id').value; const deb = document.getElementById('edit-debit').value; const cred = document.getElementById('edit-credit').value;
-      if(deb === cred) return alert('借方と貸方が同じです');
+      if(deb === cred) return alert('借方貸方が同じです');
       const j = state.journals.find(x => String(x.id) === String(id));
       if(j) {
         j.date = document.getElementById('edit-date').value; j.debit = deb; j.credit = cred; j.amount = parseInt(document.getElementById('edit-amount').value, 10); j.desc = document.getElementById('edit-memo').value.trim();
-        saveData(); closeEditModal(); refreshViews(document.querySelector('.tab-content.active').id);
+        saveData(); closeEditModal(); renderHistory(); renderDashboard(); 
       }
     };
     window.deleteJournal = function(id) {
-      if(confirm('完全に削除しますか？')) { state.journals = state.journals.filter(j => String(j.id) !== String(id)); saveData(); refreshViews(document.querySelector('.tab-content.active').id); }
+      if(confirm('完全に削除しますか？')) { state.journals = state.journals.filter(j => String(j.id) !== String(id)); saveData(); renderHistory(); renderDashboard(); }
     };
 
-    // --- 8. Reports & Analytics ---
     let currentReportTab = 'summary';
     window.switchReportTab = function(tabId) {
       currentReportTab = tabId;
@@ -697,8 +667,8 @@
       document.getElementById('report-' + tabId).classList.remove('hidden');
       ['rtab-summary', 'rtab-pl', 'rtab-bs', 'rtab-ledger', 'rtab-budget'].forEach(id => {
         const btn = document.getElementById(id); if(!btn) return;
-        if(id === 'rtab-' + tabId) { btn.className = 'btn-primary !px-5 !py-2.5 !rounded-xl !text-sm whitespace-nowrap shadow-sm transition'; } 
-        else { btn.className = 'btn-secondary !px-5 !py-2.5 !rounded-xl !text-sm whitespace-nowrap !border-gray-200 shadow-sm transition'; }
+        if(id === 'rtab-' + tabId) { btn.className = 'btn-primary !px-4 !py-2 !rounded-lg !text-sm whitespace-nowrap shadow-sm transition'; } 
+        else { btn.className = 'btn-secondary !px-4 !py-2 !rounded-lg !text-sm whitespace-nowrap !border-gray-200 shadow-sm transition'; }
       });
       renderReports();
     };
@@ -737,48 +707,112 @@
         document.getElementById('bs-total-assets').innerText = formatJPY(aTot); document.getElementById('bs-total-liab').innerText = formatJPY(lTot); document.getElementById('bs-total-equity').innerText = formatJPY(aTot - lTot);
       }
       if(currentReportTab === 'ledger') {
-        const sel = document.getElementById('ledger-acc-select'); if(sel.options.length === 0) sel.innerHTML = buildAccOptions();
+        const sel = document.getElementById('ledger-acc-select'); if(sel.options.length === 0) sel.innerHTML = buildAccOptions(['asset','liability','expense','income']);
         const accId = sel.value; if(!accId) return; const accType = getAcc(accId).type; const tbody = document.getElementById('ledger-tbody'); tbody.innerHTML = ''; let runBal = 0;
         [...state.journals].sort((a,b)=> new Date(a.date)-new Date(b.date)).filter(j => j.debit === accId || j.credit === accId).forEach(j => {
           const isDeb = j.debit === accId; const opp = isDeb ? getAcc(j.credit).name : getAcc(j.debit).name;
           if(accType === 'asset' || accType === 'expense') runBal += isDeb ? j.amount : -j.amount; else runBal += isDeb ? -j.amount : j.amount;
-          tbody.innerHTML += `<tr class="border-b text-sm hover:bg-gray-50 transition"><td class="p-4 text-gray-500 whitespace-nowrap">${j.date.slice(5)}</td><td class="p-4 font-bold text-gray-700">${opp}<div class="text-[10px] text-gray-400 font-normal truncate max-w-[200px] mt-1">${j.desc}</div></td><td class="p-4 text-right text-blue-600 font-bold">${isDeb?formatJPY(j.amount):''}</td><td class="p-4 text-right text-red-500 font-bold">${!isDeb?formatJPY(j.amount):''}</td><td class="p-4 text-right font-black text-base bg-gray-50">${formatJPY(runBal)}</td></tr>`;
+          tbody.innerHTML += `<tr class="border-b text-xs md:text-sm hover:bg-gray-50 transition"><td class="p-3 text-gray-500 whitespace-nowrap">${j.date.slice(5)}</td><td class="p-3 font-bold text-gray-700">${opp}<div class="text-[10px] text-gray-400 font-normal truncate max-w-[150px] mt-0.5">${j.desc||''}</div></td><td class="p-3 text-right text-blue-600 font-bold">${isDeb?formatJPY(j.amount):''}</td><td class="p-3 text-right text-red-500 font-bold">${!isDeb?formatJPY(j.amount):''}</td><td class="p-3 text-right font-black bg-gray-50">${formatJPY(runBal)}</td></tr>`;
         });
       }
       if(currentReportTab === 'budget') {
-        const m = document.getElementById('budget-month').value || new Date().toISOString().slice(0,7); document.getElementById('budget-month').value = m;
+        const m = document.getElementById('budget-month').value || new Date().toISOString().slice(0,7); 
+        document.getElementById('budget-month').value = m;
+        document.getElementById('budget-month-display').innerText = m.replace('-','年')+'月';
+        
         const tbody = document.getElementById('budget-tbody'); tbody.innerHTML = ''; const mExp = {};
         state.journals.filter(j => j.date.startsWith(m)).forEach(j => { const d = getAcc(j.debit); if(d.type==='expense') mExp[j.debit] = (mExp[j.debit]||0)+j.amount; });
+        
         state.accounts.filter(a=>a.type==='expense').forEach(a => {
-          const b = state.budgets[a.id] || 0; const act = mExp[a.id] || 0; const ratio = b>0 ? (act/b)*100 : 0; const over = act>b && b>0;
-          let bar = b>0 ? `<div class="flex justify-between text-xs mb-1"><span class="${over?'text-red-600 font-bold':'text-gray-500'}">${Math.floor(ratio)}%</span><span class="text-gray-400">予算: ${formatJPY(b)}</span></div><div class="w-full bg-gray-200 rounded-full h-2"><div class="${over?'bg-red-500':'bg-blue-500'} h-2 rounded-full transition-all" style="width:${Math.min(ratio,100)}%"></div></div>` : `<span class="text-xs text-gray-400 cursor-pointer border-b border-dashed" onclick="app.setBudget('${a.id}')">予算を設定</span>`;
-          tbody.innerHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-4 font-bold text-gray-700">${a.name}</td><td class="p-4 text-right font-black text-gray-800">${formatJPY(act)}</td><td class="p-4 align-middle min-w-[150px]">${bar}</td></tr>`;
+          const baseB = state.baseBudgets[a.id] || 0;
+          const currentB = state.monthlyBudgets[m] && state.monthlyBudgets[m][a.id] !== undefined ? state.monthlyBudgets[m][a.id] : baseB;
+          const act = mExp[a.id] || 0; 
+          const ratio = currentB>0 ? (act/currentB)*100 : 0; const over = act>currentB && currentB>0;
+          
+          let bar = currentB>0 ? `<div class="flex justify-between text-xs mb-1"><span class="${over?'text-red-600 font-bold':'text-gray-500'}">${Math.floor(ratio)}%</span><span class="text-gray-400">残: ${formatJPY(currentB - act)}</span></div><div class="w-full bg-gray-200 rounded-full h-2"><div class="${over?'bg-red-500':'bg-blue-500'} h-2 rounded-full transition-all" style="width:${Math.min(ratio,100)}%"></div></div>` : `<span class="text-xs text-gray-400">予算未設定</span>`;
+          
+          tbody.innerHTML += `
+            <tr class="border-b hover:bg-gray-50">
+              <td class="p-3 font-bold text-gray-700">${a.name}</td>
+              <td class="p-3 text-right">
+                <input type="number" class="input-field !h-10 !w-24 sm:!w-32 text-right font-bold text-blue-600 bg-blue-50 py-1" value="${currentB}" onchange="updateMonthlyBudget('${m}', '${a.id}', this.value)">
+              </td>
+              <td class="p-3 text-right font-black text-gray-800">${formatJPY(act)}</td>
+              <td class="p-3 align-middle min-w-[120px]">${bar}</td>
+            </tr>`;
         });
       }
     };
     
-    window.setBudget = function(accId) {
-      const a = getAcc(accId); const b = prompt(`${a.name}の毎月の予算額(円)を入力してください:`, state.budgets[accId]||0);
-      if(b!==null && !isNaN(b)) { state.budgets[accId] = parseInt(b,10); saveData(); renderReports(); }
+    // ★ 追加機能: 当月の予算更新・繰越・コピー
+    window.updateMonthlyBudget = function(month, accId, val) {
+      if(!state.monthlyBudgets[month]) state.monthlyBudgets[month] = {};
+      state.monthlyBudgets[month][accId] = Math.max(0, parseInt(val, 10) || 0);
+      saveData(); renderReports();
     };
 
-    window.exportPDF = function() {
-      const element = document.getElementById('report-export-area'); element.classList.add('pdf-exporting');
-      html2pdf().set({ margin: 10, filename: `PoketAC_Report.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).from(element).save().then(() => element.classList.remove('pdf-exporting'));
+    window.copyPrevBudget = function() {
+      if(!confirm('前月の「予算設定額」を今月にコピーしますか？')) return;
+      const currentM = document.getElementById('budget-month').value;
+      const d = new Date(currentM + '-01'); d.setMonth(d.getMonth() - 1);
+      const prevM = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      
+      if(!state.monthlyBudgets[currentM]) state.monthlyBudgets[currentM] = {};
+      state.accounts.filter(a => a.type === 'expense').forEach(a => {
+        const prevBase = state.baseBudgets[a.id] || 0;
+        const prevB = state.monthlyBudgets[prevM]?.[a.id] !== undefined ? state.monthlyBudgets[prevM][a.id] : prevBase;
+        state.monthlyBudgets[currentM][a.id] = prevB;
+      });
+      saveData(); renderReports(); alert('コピーしました！');
     };
 
-    // --- 9. Settings & Sync ---
+    window.carryOverBudget = function() {
+      if(!confirm('前月の「未使用分(残額)」を今月の予算に上乗せしますか？')) return;
+      const currentM = document.getElementById('budget-month').value;
+      const d = new Date(currentM + '-01'); d.setMonth(d.getMonth() - 1);
+      const prevM = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      
+      if(!state.monthlyBudgets[currentM]) state.monthlyBudgets[currentM] = {};
+      
+      const prevExp = {};
+      state.journals.filter(j => j.date.startsWith(prevM)).forEach(j => { const dAcc = getAcc(j.debit); if(dAcc.type === 'expense') prevExp[j.debit] = (prevExp[j.debit]||0) + j.amount; });
+
+      state.accounts.filter(a => a.type === 'expense').forEach(a => {
+        const prevBase = state.baseBudgets[a.id] || 0;
+        const prevB = state.monthlyBudgets[prevM]?.[a.id] !== undefined ? state.monthlyBudgets[prevM][a.id] : prevBase;
+        const leftover = Math.max(0, prevB - (prevExp[a.id]||0));
+        
+        const currBase = state.baseBudgets[a.id] || 0;
+        const currB = state.monthlyBudgets[currentM]?.[a.id] !== undefined ? state.monthlyBudgets[currentM][a.id] : currBase;
+        
+        if(leftover > 0) state.monthlyBudgets[currentM][a.id] = currB + leftover;
+      });
+      saveData(); renderReports(); alert('前月の残額を繰り越しました！');
+    };
+
+    // --- 9. Settings ---
     window.renderSettings = function() {
+      // 予算設定
+      const bList = document.getElementById('set-base-budget-list'); bList.innerHTML = '';
+      state.accounts.filter(a => a.type === 'expense').forEach(a => {
+        bList.innerHTML += `<li class="flex justify-between items-center py-2 px-2 border-b border-gray-100 last:border-0"><span class="font-bold text-gray-800 text-sm">${a.name}</span><div class="flex items-center"><span class="text-gray-400 mr-2 text-sm">¥</span><input type="number" class="input-field !h-10 !w-28 text-right font-bold text-gray-700 py-1" value="${state.baseBudgets[a.id]||0}" onchange="updateBaseBudget('${a.id}', this.value)"></div></li>`;
+      });
+
       const accList = document.getElementById('set-acc-list'); accList.innerHTML = '';
       state.accounts.forEach(a => {
-        let tLabel = {asset:'資産/口座', liability:'負債/カード', expense:'支出カテゴリ', income:'収入カテゴリ', equity:'純資産'}[a.type];
-        accList.innerHTML += `<li class="flex justify-between items-center py-3 px-3 border-b border-gray-100 hover:bg-white rounded-lg"><div class="flex items-center"><span class="w-20 text-[10px] bg-gray-100 text-gray-600 font-bold text-center rounded py-1 mr-3">${tLabel}</span><span class="font-bold text-gray-800 text-base">${a.name}</span></div><button onclick="app.deleteAccount('${a.id}')" class="w-10 h-10 rounded-xl bg-red-50 text-red-500 hover:bg-red-100 transition shadow-sm"><i class="fa-solid fa-trash"></i></button></li>`;
+        let tLabel = {asset:'資産', liability:'負債', expense:'支出', income:'収入', equity:'純資産'}[a.type];
+        accList.innerHTML += `<li class="flex justify-between items-center py-3 px-3 border-b border-gray-100 hover:bg-white rounded-lg"><div class="flex items-center"><span class="w-12 text-[10px] bg-gray-100 text-gray-600 font-bold text-center rounded py-1 mr-3">${tLabel}</span><span class="font-bold text-gray-800 text-sm">${a.name}</span></div><button onclick="deleteAccount('${a.id}')" class="w-8 h-8 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition shadow-sm flex items-center justify-center"><i class="fa-solid fa-trash text-xs"></i></button></li>`;
       });
+
       const recList = document.getElementById('set-rec-list'); recList.innerHTML = '';
       state.recurring.forEach(r => {
-        recList.innerHTML += `<li class="flex justify-between items-center py-4 px-4 border border-gray-100 bg-white rounded-xl mb-3 shadow-sm"><span class="font-black text-blue-700 w-16 text-xl">${r.day}日</span><span class="flex-1 text-xs font-bold text-gray-500">出: ${getAcc(r.credit).name} <i class="fa-solid fa-arrow-right text-gray-300 mx-1"></i> 入: ${getAcc(r.debit).name}<br><span class="text-gray-800 text-lg font-black mt-1 inline-block">${formatJPY(r.amount)}</span></span><button onclick="app.deleteRecurring('${r.id}')" class="btn-icon bg-red-50 text-red-500 hover:bg-red-100 transition border border-red-100 shadow-sm"><i class="fa-solid fa-trash"></i></button></li>`;
+        recList.innerHTML += `<li class="flex justify-between items-center py-3 px-3 border border-gray-100 bg-white rounded-xl mb-2 shadow-sm"><span class="font-black text-blue-700 w-12 text-lg">${r.day}日</span><span class="flex-1 text-xs font-bold text-gray-500">出: ${getAcc(r.credit).name} <i class="fa-solid fa-arrow-right text-gray-300 mx-1"></i> 入: ${getAcc(r.debit).name}<br><span class="text-gray-800 text-sm font-black mt-1 inline-block">${formatJPY(r.amount)}</span></span><button onclick="deleteRecurring('${r.id}')" class="btn-icon bg-red-50 text-red-500 hover:bg-red-100 transition border border-red-100 shadow-sm !w-8 !h-8"><i class="fa-solid fa-trash text-xs"></i></button></li>`;
       });
       document.getElementById('r-account').innerHTML = buildAccOptions(['asset','liability']); document.getElementById('r-category').innerHTML = buildAccOptions(['expense','income','asset']);
+    };
+
+    window.updateBaseBudget = function(id, val) {
+      state.baseBudgets[id] = Math.max(0, parseInt(val, 10)||0); saveData();
     };
 
     window.addAccount = function(e) {
@@ -786,23 +820,27 @@
       if(state.accounts.some(a => a.name === name)) return alert("同名が存在します");
       state.accounts.push({ id: generateId(type.charAt(0)), name, type }); saveData(); document.getElementById('new-acc-name').value = ''; renderSettings();
     };
+    
     window.deleteAccount = function(id) {
       if(state.journals.some(j => j.debit === id || j.credit === id)) return alert('使用中のため削除できません');
-      if(confirm('削除しますか？')){ state.accounts = state.accounts.filter(a => String(a.id) !== String(id)); saveData(); renderSettings(); }
+      if(confirm('削除しますか？')){ 
+        state.accounts = state.accounts.filter(a => String(a.id) !== String(id)); 
+        delete state.baseBudgets[id];
+        Object.keys(state.monthlyBudgets).forEach(m => delete state.monthlyBudgets[m][id]);
+        saveData(); renderSettings(); 
+      }
     };
+    
     window.addRecurring = function(e) {
       e.preventDefault();
-      // 入力フォームと逆だが、経理上は: 支払元=Credit, 用途=Debit
       const acc = document.getElementById('r-account').value; const cat = document.getElementById('r-category').value;
       const type = getAcc(cat).type; let debit, credit;
-      if(type==='expense') { debit = cat; credit = acc; } else { debit = acc; credit = cat; } // income
-      
+      if(type==='expense') { debit = cat; credit = acc; } else { debit = acc; credit = cat; }
       const r = { id: generateId('r'), day: parseInt(document.getElementById('r-day').value, 10), debit, credit, amount: parseInt(document.getElementById('r-amount').value, 10), desc: document.getElementById('r-memo').value };
       state.recurring.push(r); saveData(); document.getElementById('r-amount').value = ''; document.getElementById('r-memo').value = ''; renderSettings(); alert('ルールを追加しました');
     };
     window.deleteRecurring = function(id) { if(confirm('削除しますか？')) { state.recurring = state.recurring.filter(r => String(r.id) !== String(id)); saveData(); renderSettings(); } };
     
-    // Backup & Sync
     window.exportCSV = function() {
       const rows = [['id','date','debit','credit','amount','desc'].join(',')];
       state.journals.forEach(j => rows.push([j.id, j.date, j.debit, j.credit, j.amount, `"${(j.desc||'').replace(/"/g,'""')}"`].join(',')));
@@ -829,7 +867,7 @@
         const res = await fetch('https://jsonblob.com/api/jsonBlob', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(state) });
         const id = res.headers.get('Location').split('/').pop();
         document.getElementById('sync-id-display').innerText = id; document.getElementById('sync-result').classList.remove('hidden');
-      } catch(e) { alert('失敗しました'); } finally { btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-2"></i>アップロードする'; btn.disabled = false; }
+      } catch(e) { alert('失敗しました'); } finally { btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-1"></i>一時IDを発行'; btn.disabled = false; }
     };
     window.syncDownload = async function() {
       const id = document.getElementById('sync-id-input').value.trim(); if(!id) return;
@@ -839,14 +877,17 @@
         if(!res.ok) throw new Error();
         const data = await res.json();
         if(data.accounts && data.journals) { state = data; saveData(); alert('復元しました！'); location.reload(); } else throw new Error();
-      } catch(e) { alert('失敗しました。IDを確認してください。'); } finally { btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-down"></i>'; btn.disabled = false; }
+      } catch(e) { alert('失敗しました。IDを確認してください。'); } finally { btn.innerHTML = '<i class="fa-solid fa-download"></i>'; btn.disabled = false; }
     };
     window.resetData = function() { if(confirm('本当にすべて削除しますか？')) { localStorage.clear(); location.reload(); } };
+    window.exportPDF = function() {
+      const element = document.getElementById('report-export-area'); element.classList.add('pdf-exporting');
+      html2pdf().set({ margin: 10, filename: `PoketAC_Report.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).from(element).save().then(() => element.classList.remove('pdf-exporting'));
+    };
 
     // --- 10. Boot ---
-    function boot() {
+    window.addEventListener('DOMContentLoaded', () => {
       loadData();
-      
       const tm = new Date().toISOString().slice(0, 7); const td = new Date().getDate(); let added = 0;
       state.recurring.forEach(r => {
         if(td >= r.day && r.lastMonth !== tm) {
@@ -855,19 +896,8 @@
         }
       });
       if(added > 0) { saveData(); alert(`${added}件の定期入力が自動記録されました`); }
-      
-      switchTab('dashboard'); // 初期画面
-    }
-
-    // Global Exposure
-    window.app = {
-      navigate: switchTab, switchInputMode, submitTransaction, submitComplexJournal: window.submitComplexJournal,
-      renderDashboard, renderHistory, renderReports, renderLedger, switchReportTab, setBudget, exportPDF,
-      openEditModal, closeEditModal, saveEdit, deleteJournal, deleteDisplayedJournals,
-      renderSettings, addAccount, deleteAccount, addRecurring, deleteRecurring, exportBackupCSV: exportCSV, importBackupCSV: importCSV, syncUpload, syncDownload, resetAllData: resetData
-    };
-
-    window.addEventListener('DOMContentLoaded', boot);
+      switchTab('dashboard');
+    });
   </script>
 </body>
 </html>

@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#F3F4F6">
+  
   <title>Poket AC</title>
   
   <script>
@@ -19,8 +24,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
+    /* iPhoneのセーフエリア（ダイナミックアイランドやホームバー）を考慮した余白設定 */
     body { 
-      background-color: #F3F4F6;
+      background-color: #F3F4F6; /* 背景色を統一してステータスバーを綺麗に見せる */
       padding-bottom: calc(65px + env(safe-area-inset-bottom)); 
       -webkit-tap-highlight-color: transparent; 
     }
@@ -40,6 +46,7 @@
     .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
     .pdf-exporting { background-color: #f3f4f6 !important; padding: 20px !important; }
 
+    /* iPhone用 セーフエリアクラス */
     .pt-safe { padding-top: max(1rem, env(safe-area-inset-top)); }
     .pb-safe { padding-bottom: max(0.5rem, env(safe-area-inset-bottom)); }
     .px-safe { padding-left: max(1rem, env(safe-area-inset-left)); padding-right: max(1rem, env(safe-area-inset-right)); }
@@ -55,7 +62,7 @@
     <nav class="flex space-x-3 lg:space-x-5 text-sm lg:text-base whitespace-nowrap">
       <button onclick="navigate('dashboard')" class="nav-btn text-gray-600 hover:text-blue-600 font-medium" data-target="dashboard">ホーム</button>
       <button onclick="navigate('input')" class="nav-btn text-gray-600 hover:text-blue-600 font-medium" data-target="input">入力</button>
-      <button onclick="navigate('history')" class="nav-btn text-gray-600 hover:text-blue-600 font-medium" data-target="history">履歴</button>
+      <button onclick="navigate('ledger')" class="nav-btn text-gray-600 hover:text-blue-600 font-medium" data-target="ledger">元帳</button>
       <button onclick="navigate('bs')" class="nav-btn text-gray-600 hover:text-blue-600 font-medium" data-target="bs">B/S</button>
       <button onclick="navigate('pl')" class="nav-btn text-gray-600 hover:text-blue-600 font-medium" data-target="pl">P/L</button>
       <button onclick="navigate('budget')" class="nav-btn text-gray-600 hover:text-blue-600 font-medium" data-target="budget"><i class="fa-solid fa-bullseye mr-1"></i>予算</button>
@@ -137,28 +144,28 @@
       </div>
     </section>
 
-    <section id="history" class="tab-content">
-      <h2 class="text-2xl font-bold mb-6 text-gray-700">仕訳履歴</h2>
+    <section id="ledger" class="tab-content">
+      <h2 class="text-2xl font-bold mb-6 text-gray-700">総勘定元帳</h2>
       <div class="bg-white p-4 md:p-6 rounded-xl shadow-sm border border-gray-100">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
-          <h3 class="text-lg font-bold text-gray-700">すべての仕訳</h3>
-          <button onclick="deleteAllJournals()" class="w-full md:w-auto text-red-500 hover:text-red-700 text-sm font-bold bg-red-50 px-3 py-2 rounded border border-red-100 shadow-sm transition text-center">
-            <i class="fa-solid fa-trash-can mr-1"></i>すべての仕訳を削除
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-4 gap-4">
+          <div class="w-full md:w-1/3">
+            <label class="block text-sm font-medium text-gray-700 mb-1">勘定科目を選択</label>
+            <select id="ledger-account-select" class="w-full border border-gray-300 rounded-lg p-2.5 bg-gray-50 font-bold text-blue-700"></select>
+          </div>
+          <button onclick="deleteDisplayedJournals()" class="w-full md:w-auto text-red-500 hover:text-red-700 text-sm font-bold bg-red-50 px-3 py-2 rounded border border-red-100 shadow-sm transition text-center">
+            <i class="fa-solid fa-trash-can mr-1"></i>表示中の仕訳をすべて削除
           </button>
         </div>
         <div class="overflow-x-auto max-h-[600px] border rounded shadow-inner">
           <table class="w-full text-sm text-left relative whitespace-nowrap md:whitespace-normal">
             <thead class="bg-gray-100 text-gray-600 sticky top-0 z-10 shadow-sm">
               <tr>
-                <th class="p-2 md:p-3">日付</th>
-                <th class="p-2 md:p-3">借方</th>
-                <th class="p-2 md:p-3">貸方</th>
-                <th class="p-2 md:p-3">記録</th>
-                <th class="p-2 md:p-3 text-right">金額</th>
+                <th class="p-2 md:p-3">日付</th><th class="p-2 md:p-3">相手科目</th><th class="p-2 md:p-3">記録</th>
+                <th class="p-2 md:p-3 text-right">借方</th><th class="p-2 md:p-3 text-right">貸方</th><th class="p-2 md:p-3 text-right">残高</th>
                 <th class="p-2 md:p-3 text-center">操作</th>
               </tr>
             </thead>
-            <tbody id="history-table-body" class="divide-y divide-gray-100 bg-white"></tbody>
+            <tbody id="ledger-table-body" class="divide-y divide-gray-100 bg-white"></tbody>
           </table>
         </div>
       </div>
@@ -400,7 +407,7 @@
   <nav class="md:hidden fixed bottom-0 w-full bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.05)] flex px-1 pt-2 pb-safe z-10 border-t border-gray-100 overflow-x-auto hide-scroll space-x-2">
     <button onclick="navigate('dashboard')" class="nav-btn-mobile flex flex-col items-center text-gray-400 min-w-[55px] shrink-0" data-target="dashboard"><i class="fa-solid fa-chart-pie text-lg mb-1"></i><span class="text-[9px]">ホーム</span></button>
     <button onclick="navigate('input')" class="nav-btn-mobile flex flex-col items-center text-gray-400 min-w-[55px] shrink-0" data-target="input"><i class="fa-solid fa-pen-to-square text-lg mb-1"></i><span class="text-[9px]">入力</span></button>
-    <button onclick="navigate('history')" class="nav-btn-mobile flex flex-col items-center text-gray-400 min-w-[55px] shrink-0" data-target="history"><i class="fa-solid fa-list text-lg mb-1"></i><span class="text-[9px]">履歴</span></button>
+    <button onclick="navigate('ledger')" class="nav-btn-mobile flex flex-col items-center text-gray-400 min-w-[55px] shrink-0" data-target="ledger"><i class="fa-solid fa-list text-lg mb-1"></i><span class="text-[9px]">元帳</span></button>
     <button onclick="navigate('bs')" class="nav-btn-mobile flex flex-col items-center text-gray-400 min-w-[55px] shrink-0" data-target="bs"><i class="fa-solid fa-scale-balanced text-lg mb-1"></i><span class="text-[9px]">B/S</span></button>
     <button onclick="navigate('pl')" class="nav-btn-mobile flex flex-col items-center text-gray-400 min-w-[55px] shrink-0" data-target="pl"><i class="fa-solid fa-file-invoice-dollar text-lg mb-1"></i><span class="text-[9px]">P/L</span></button>
     <button onclick="navigate('budget')" class="nav-btn-mobile flex flex-col items-center text-gray-400 min-w-[55px] shrink-0" data-target="budget"><i class="fa-solid fa-bullseye text-lg mb-1"></i><span class="text-[9px]">予算</span></button>
@@ -618,13 +625,15 @@
       }
     };
 
-    window.deleteAllJournals = function() {
-      if(state.journals.length === 0) return;
-      if(confirm(`すべての仕訳履歴を削除しますか？\n※この操作は取り消せません`)) {
-        state.journals = [];
+    window.deleteDisplayedJournals = function() {
+      const accId = document.getElementById('ledger-account-select').value;
+      if(!accId) return;
+      const accName = getAccount(accId).name;
+      if(confirm(`現在表示されている「${accName}」が関わる全ての仕訳を削除しますか？\n※この操作は取り消せません`)) {
+        state.journals = state.journals.filter(j => j.debit !== accId && j.credit !== accId);
         saveData();
-        renderView('history');
-        alert('すべての仕訳を削除しました。');
+        renderView('ledger');
+        alert('表示中の仕訳を一括削除しました。');
       }
     };
 
@@ -655,7 +664,7 @@
     function renderView(viewId) {
       calculateBalances();
       if (viewId === 'dashboard') renderDashboard();
-      if (viewId === 'history') renderHistory();
+      if (viewId === 'ledger') renderLedger();
       if (viewId === 'bs') renderBS();
       if (viewId === 'pl') renderPL();
       if (viewId === 'budget') renderBudget();
@@ -705,28 +714,29 @@
       recent.forEach(j => { tbody.innerHTML += `<tr class="bg-white border-b"><td class="p-2 sm:p-3">${j.date.slice(5)}</td><td class="p-2 sm:p-3"><span class="block text-[10px] text-gray-400">借: ${getAccount(j.debit).name}</span><span class="block text-[10px] text-gray-400">貸: ${getAccount(j.credit).name}</span></td><td class="p-2 sm:p-3 min-w-[120px] whitespace-normal break-words">${formatRecordDesc(j)}</td><td class="p-2 sm:p-3 font-medium text-right">${formatCurrency(j.amount)}</td></tr>`; });
     }
 
-    // --- History Tab (replaced Ledger) ---
-    function renderHistory() {
-      const tbody = document.getElementById('history-table-body'); 
-      tbody.innerHTML = '';
-      
-      const sortedJournals = [...state.journals].sort((a, b) => new Date(b.date) - new Date(a.date)); // 降順
-      
-      if (sortedJournals.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-gray-500">仕訳データがありません</td></tr>`;
-        return;
-      }
+    function renderLedger() {
+      const select = document.getElementById('ledger-account-select'); select.innerHTML = '';
+      state.accounts.forEach(a => { select.innerHTML += `<option value="${a.id}">${a.name}</option>`; });
+      select.removeEventListener('change', updateLedgerTable); select.addEventListener('change', updateLedgerTable);
+      updateLedgerTable();
+    }
 
-      sortedJournals.forEach(j => {
-        const debitAcc = getAccount(j.debit).name; 
-        const creditAcc = getAccount(j.credit).name;
+    function updateLedgerTable() {
+      const accId = document.getElementById('ledger-account-select').value; if(!accId) return;
+      const accType = getAccount(accId).type; const tbody = document.getElementById('ledger-table-body'); tbody.innerHTML = '';
+      let runningBalance = 0;
+      const sortedJournals = [...state.journals].sort((a, b) => new Date(a.date) - new Date(b.date));
+      sortedJournals.filter(j => j.debit === accId || j.credit === accId).forEach(j => {
+        const isDebit = j.debit === accId; const opponent = isDebit ? getAccount(j.credit).name : getAccount(j.debit).name;
+        if (accType === 'asset' || accType === 'expense') runningBalance += isDebit ? j.amount : -j.amount; else runningBalance += isDebit ? -j.amount : j.amount;
         tbody.innerHTML += `
           <tr class="hover:bg-blue-50 transition-colors text-xs sm:text-sm">
-            <td class="p-2 md:p-3 border-b whitespace-nowrap">${j.date}</td>
-            <td class="p-2 md:p-3 border-b truncate max-w-[60px] md:max-w-[80px]">${debitAcc}</td>
-            <td class="p-2 md:p-3 border-b truncate max-w-[60px] md:max-w-[80px]">${creditAcc}</td>
+            <td class="p-2 md:p-3 border-b">${j.date.slice(5)}</td>
+            <td class="p-2 md:p-3 border-b truncate max-w-[60px] md:max-w-[80px]">${opponent}</td>
             <td class="p-2 md:p-3 border-b min-w-[120px] md:min-w-[200px] whitespace-normal break-words">${formatRecordDesc(j)}</td>
-            <td class="p-2 md:p-3 border-b text-right font-bold text-gray-700">${formatCurrency(j.amount)}</td>
+            <td class="p-2 md:p-3 border-b text-right">${isDebit ? formatCurrency(j.amount) : ''}</td>
+            <td class="p-2 md:p-3 border-b text-right">${!isDebit ? formatCurrency(j.amount) : ''}</td>
+            <td class="p-2 md:p-3 border-b text-right font-bold text-blue-600">${formatCurrency(runningBalance)}</td>
             <td class="p-2 md:p-3 border-b text-center"><button onclick="deleteJournal('${j.id}')" class="text-red-400 hover:text-red-600 hover:bg-red-50 rounded px-2 py-1 transition"><i class="fa-solid fa-trash"></i></button></td>
           </tr>
         `;
@@ -887,6 +897,7 @@
         window.reportAnnualPieInst = new Chart(ctxAnnualPie, { type: 'doughnut', data: { labels: pieLabels, datasets: [{ data: pieData, backgroundColor: bgColors }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' } } } });
       }
 
+      // サマリー表
       const tbody = document.getElementById('rep-annual-tbody'); tbody.innerHTML = '';
       let sumInc = 0, sumFix = 0, sumVar = 0, sumNet = 0;
       for (let i = 0; i < 12; i++) {
@@ -897,7 +908,7 @@
       tbody.innerHTML += `<tr class="bg-gray-100 font-bold"><td class="p-2">年間合計</td><td class="p-2 text-right text-blue-600">${formatCurrency(sumInc)}</td><td class="p-2 text-right text-purple-600">${formatCurrency(sumFix)}</td><td class="p-2 text-right text-orange-600">${formatCurrency(sumVar)}</td><td class="p-2 text-right ${sumNet >= 0 ? 'text-green-600' : 'text-red-600'}">${formatCurrency(sumNet)}</td></tr>`;
     }
 
-    // --- その他 (省略部を全て復元) ---
+    // --- その他 ---
     function updateCategoryDatalist() {
       const majorList = document.getElementById('major-category-list'); const minorList = document.getElementById('minor-category-list');
       majorList.innerHTML = state.categories.major.map(c => `<option value="${c.name}">`).join(''); minorList.innerHTML = state.categories.minor.map(c => `<option value="${c}">`).join('');
@@ -1014,4 +1025,69 @@
     }
     function renderSettings() {
       const majorUl = document.getElementById('setting-major-list'); const minorUl = document.getElementById('setting-minor-list');
-      majorUl.innerHTML = state.categories.major.map(c => `<li class="flex justify-between items-center bg-white p-2 rounded shadow-sm text-sm border-l-4 ${c.expenseType === 'fixed' ? 'border-purple-500' : 'border-orange-500'}"><div><span class="font-medium">${c.name}</span><span class="
+      majorUl.innerHTML = state.categories.major.map(c => `<li class="flex justify-between items-center bg-white p-2 rounded shadow-sm text-sm border-l-4 ${c.expenseType === 'fixed' ? 'border-purple-500' : 'border-orange-500'}"><div><span class="font-medium">${c.name}</span><span class="text-[10px] text-gray-400 ml-2">${c.expenseType === 'fixed' ? '固定費' : '変動費'}</span></div><div><button onclick="editCategory('major', '${c.name}')" class="text-blue-500 mr-3"><i class="fa-solid fa-pen"></i></button><button onclick="deleteCategory('major', '${c.name}')" class="text-red-500"><i class="fa-solid fa-trash"></i></button></div></li>`).join('');
+      minorUl.innerHTML = state.categories.minor.map(c => `<li class="flex justify-between items-center bg-white p-2 rounded shadow-sm text-sm"><span>${c}</span><div><button onclick="editCategory('minor', '${c}')" class="text-blue-500 mr-3"><i class="fa-solid fa-pen"></i></button><button onclick="deleteCategory('minor', '${c}')" class="text-red-500"><i class="fa-solid fa-trash"></i></button></div></li>`).join('');
+      const reqUl = document.getElementById('setting-recurring-list');
+      reqUl.innerHTML = state.recurring.map(r => `<li class="flex justify-between items-center bg-white p-3 rounded shadow-sm text-sm border-l-4 border-blue-500"><div><div class="font-bold text-gray-700">毎月 ${r.day} 日 <span class="text-blue-600 ml-2">¥${formatCurrency(r.amount).replace('¥','')}</span></div><div class="text-xs text-gray-500 mt-1">${r.majorCategory} / ${getAccount(r.debit).name} ← ${getAccount(r.credit).name}</div></div><button onclick="deleteRecurring('${r.id}')" class="text-red-500 hover:text-red-700 p-2"><i class="fa-solid fa-trash"></i></button></li>`).join('');
+      const tbody = document.getElementById('settings-accounts-list'); tbody.innerHTML = '';
+      Object.keys(TYPE_LABELS).forEach(type => { state.accounts.filter(a => a.type === type).forEach(a => { tbody.innerHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-2"><span class="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs">${TYPE_LABELS[a.type]}</span></td><td class="p-2 font-medium">${a.name}</td><td class="p-2 text-right"><button onclick="deleteAccount('${a.id}')" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button></td></tr>`; }); });
+      document.getElementById('r-debit').innerHTML = getOptionsHTML(); document.getElementById('r-credit').innerHTML = getOptionsHTML();
+    }
+    window.addCategory = function(type) {
+      if (type === 'major') {
+        const name = document.getElementById('new-major-cat').value.trim(); const expenseType = document.getElementById('new-major-type').value;
+        if (!name) return; if (state.categories.major.some(c => c.name === name)) return alert('既に存在します');
+        state.categories.major.push({ name, expenseType }); document.getElementById('new-major-cat').value = '';
+      } else {
+        const name = document.getElementById('new-minor-cat').value.trim(); if (!name) return;
+        if (state.categories.minor.includes(name)) return alert('既に存在します');
+        state.categories.minor.push(name); document.getElementById('new-minor-cat').value = '';
+      }
+      saveData(); renderSettings(); updateCategoryDatalist();
+    };
+    window.editCategory = function(type, oldName) {
+      const newName = prompt(`「${oldName}」の新しい名前を入力:`, oldName);
+      if (!newName || newName.trim() === '' || newName === oldName) return;
+      if (type === 'major') {
+        if (state.categories.major.some(c => c.name === newName.trim())) return alert('既に存在します');
+        const cat = state.categories.major.find(c => c.name === oldName); if(cat) cat.name = newName.trim();
+        if(state.budgets[oldName] !== undefined) { state.budgets[newName.trim()] = state.budgets[oldName]; delete state.budgets[oldName]; }
+        state.journals.forEach(j => { if (j.majorCategory === oldName) j.majorCategory = newName.trim(); }); state.recurring.forEach(r => { if (r.majorCategory === oldName) r.majorCategory = newName.trim(); });
+      } else {
+        if (state.categories.minor.includes(newName.trim())) return alert('既に存在します');
+        const index = state.categories.minor.indexOf(oldName); if (index > -1) state.categories.minor[index] = newName.trim();
+        state.journals.forEach(j => { if (j.minorCategory === oldName) j.minorCategory = newName.trim(); });
+      }
+      saveData(); renderSettings(); updateCategoryDatalist(); alert('更新しました。');
+    };
+    window.deleteCategory = function(type, name) {
+      if (confirm(`「${name}」を削除しますか？\n（過去のデータは保持されます）`)) {
+        if(type === 'major') { state.categories.major = state.categories.major.filter(c => c.name !== name); delete state.budgets[name]; } 
+        else { state.categories.minor = state.categories.minor.filter(c => c !== name); }
+        saveData(); renderSettings(); updateCategoryDatalist();
+      }
+    };
+    document.getElementById('account-form').addEventListener('submit', (e) => {
+      e.preventDefault(); const name = document.getElementById('new-acc-name').value.trim(); const type = document.getElementById('new-acc-type').value;
+      if (!name || state.accounts.some(a => a.name === name)) return alert('無効な名前、または既に登録されています。');
+      state.accounts.push({ id: type.charAt(0) + Date.now().toString().slice(-6), name, type }); saveData(); document.getElementById('new-acc-name').value = ''; renderSettings();
+    });
+    window.deleteAccount = function(id) {
+      if (state.journals.some(j => j.debit === id || j.credit === id)) return alert('過去の仕訳で使用されているため削除できません。');
+      if (confirm(`本当に削除しますか？`)) { state.accounts = state.accounts.filter(a => a.id !== id); saveData(); renderSettings(); }
+    };
+    document.getElementById('recurring-form').addEventListener('submit', (e) => {
+      e.preventDefault(); const r = { id: 'r-' + Date.now(), day: parseInt(document.getElementById('r-day').value, 10), debit: document.getElementById('r-debit').value, credit: document.getElementById('r-credit').value, amount: parseInt(document.getElementById('r-amount').value, 10), majorCategory: document.getElementById('r-major').value.trim(), lastTriggeredMonth: '' };
+      if(r.debit === r.credit) return alert('借方と貸方が同じです');
+      state.recurring.push(r); autoRegisterCategories(r.majorCategory, ''); saveData(); e.target.reset(); renderSettings();
+    });
+    window.deleteRecurring = function(id) { if(confirm('削除しますか？')) { state.recurring = state.recurring.filter(r => r.id !== id); saveData(); renderSettings(); } };
+    window.clearAllData = function() { if(confirm("全データを完全に初期化しますか？")) { localStorage.clear(); location.reload(); } };
+
+    // 初期化
+    updateCategoryDatalist();
+    addJournalEntryRow(); 
+    navigate('dashboard');
+  </script>
+</body>
+</html>
